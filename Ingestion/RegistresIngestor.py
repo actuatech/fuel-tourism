@@ -26,5 +26,10 @@ def register_ingestor_function(path_registre_vehicles: str) -> pd.DataFrame:
     # Parsing of date columns
     registre['DATA_ALTA'] = registre['DATA_ALTA'].apply(date_parser)
     registre['DATA_BAIXA'] = registre['DATA_BAIXA'].apply(date_parser)
+    registre['DATA_DARRERA_ITV'] = registre['DATA_DARRERA_ITV'].apply(date_parser)
+    registre['DATA_DARRERA_ITV2'] = registre['DATA_DARRERA_ITV2'].apply(date_parser)
+    registre['DATA_DARRERA_ITV3'] = registre['DATA_DARRERA_ITV3'].apply(date_parser)
+    registre['DATA_DARRERA_ITV4'] = registre['DATA_DARRERA_ITV4'].apply(date_parser)
+    registre['DATA_DARRERA_ITV5'] = registre['DATA_DARRERA_ITV5'].apply(date_parser)
 
     return registre
