@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from .date_parser import date_parser
+from .DateParser import date_parser
+from .YearParser import year_of_manufacturing_parser
 
 COLUMNS_SET = {'ANY_FABRICACIO', 'CARBURANT', 'CARREGA_UTIL', 'CC_CM3', 'CO2', 'CV', 'DATA_ALTA', 'DATA_BAIXA',
                'DATA_DARRERA_ITV', 'DATA_DARRERA_ITV2', 'DATA_DARRERA_ITV3', 'DATA_DARRERA_ITV4', 'DATA_DARRERA_ITV5',
@@ -31,5 +32,6 @@ def register_ingestor_function(path_registre_vehicles: str) -> pd.DataFrame:
     registre['DATA_DARRERA_ITV3'] = registre['DATA_DARRERA_ITV3'].apply(date_parser)
     registre['DATA_DARRERA_ITV4'] = registre['DATA_DARRERA_ITV4'].apply(date_parser)
     registre['DATA_DARRERA_ITV5'] = registre['DATA_DARRERA_ITV5'].apply(date_parser)
+    registre['ANY_FABRICACIO'] = registre['ANY_FABRICACIO'].apply(year_of_manufacturing_parser)
 
     return registre
