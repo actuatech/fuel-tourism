@@ -6,13 +6,17 @@ def filter_by_year_greater_than(registre_df: pd.DataFrame, colname: str, date) -
     return registre_df[registre_df[colname] > date]
 
 
-def drop_vehicles_agricols(registre_df: pd.DataFrame) -> pd.DataFrame:
-    num_vehicles_agricols = registre_df[registre_df.CARBURANT == 'SENSE CARBURANT'].shape[0]
-    print(f'Total number of vehicles agricols deleted: {num_vehicles_agricols}')
+def keep_row_if_na_in_column(registre_df: pd.DataFrame, colname: str)-> pd.DataFrame:
+    return registre_df[registre_df[colname].isna()]
+
+
+def drop_agricultural_vehicles(registre_df: pd.DataFrame) -> pd.DataFrame:
+    num_agricultural_vehicles = registre_df[registre_df.CARBURANT == 'SENSE CARBURANT'].shape[0]
+    print(f'Total number of agricultural vehicles deleted: {num_agricultural_vehicles}')
     return registre_df[registre_df['TIPUS'] != 'VEHICLES AGRICOLS']
 
 
-def drop_vehicles_sense_carburant(registre_df: pd.DataFrame) -> pd.DataFrame:
-    num_vehicles_sense_carburant = registre_df[registre_df.CARBURANT == 'SENSE CARBURANT'].shape[0]
-    print(f'Total number of vehicles SENSE CARBURANT deleted: {num_vehicles_sense_carburant}')
+def drop_vehicles_with_no_fuel_associated(registre_df: pd.DataFrame) -> pd.DataFrame:
+    num_vehicles_no_fuel = registre_df[registre_df.CARBURANT == 'SENSE CARBURANT'].shape[0]
+    print(f'Total number of vehicles with no fuel associated deleted: {num_vehicles_no_fuel}')
     return registre_df[registre_df['CARBURANT'] != 'SENSE CARBURANT']
