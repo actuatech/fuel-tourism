@@ -10,7 +10,9 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
     if row['Category'] == 'Passenger Cars':
         if row['Fuel'] == 'Diesel' or row['Fuel'] == 'Petrol' or row['Fuel'] == 'Petrol Hybrid'\
                 or row['Fuel'] == 'Petrol PHEV' or row['Fuel'] == 'Diesel PHEV' or row['Fuel'] == 'CNG Bifuel'\
-                or row['Fuel'] == 'LPG Bifuel':
+                or row['Fuel'] == 'LPG Bifuel' or \
+                row['Fuel'] == 'Diesel Hybrid' or \
+                row['Fuel'] == 'Petrol Hybrid':
 
             if row['ANY_FABRICACIO'] < 1978:
                 return 'ECE 15/00-01'
