@@ -6,14 +6,9 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
     :param row: row of a pd.DataFrame that contains itv register data
     :return: Euro Standard techonology
     """
-    # Technology classification of Passenger Cars Category
-    if row['Category'] == 'Passenger Cars':
-        if row['Fuel'] == 'Diesel' or row['Fuel'] == 'Petrol' or row['Fuel'] == 'Petrol Hybrid'\
-                or row['Fuel'] == 'Petrol PHEV' or row['Fuel'] == 'Diesel PHEV' or row['Fuel'] == 'CNG Bifuel'\
-                or row['Fuel'] == 'LPG Bifuel' or \
-                row['Fuel'] == 'Diesel Hybrid' or \
-                row['Fuel'] == 'Petrol Hybrid':
 
+    if row['Category'] == 'Passenger Cars':
+        if row['Fuel'] != 'Battery electric':  # No Euro Category for electric cars
             if row['ANY_FABRICACIO'] < 1978:
                 return 'ECE 15/00-01'
             elif 1978 < row['ANY_FABRICACIO'] < 1981:
@@ -38,6 +33,8 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 return 'Euro 6 d-temp'
             elif row['ANY_FABRICACIO'] >= 2021:
                 return 'Euro 6 d'
+        else:
+            return None
 
     # Technology classification of Light Commercial Vehicles
     elif row['Category'] == 'Light Commercial Vehicles':
@@ -106,7 +103,8 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
 
     # Technology classification of Heavy Duty Trucks
     elif row['Category'] == 'Heavy Duty Trucks':
-        if row['Fuel'] == 'Diesel' or row['Fuel'] == 'Petrol':
+        # TODO: verificar si hi han Euro Standards per Diesel Hybrid i altres
+        if row['Fuel'] == 'Diesel' or row['Fuel'] == 'Petrol' or row['Fuel'] == 'Diesel Hybrid':
             if row['ANY_FABRICACIO'] < 1992:
                 return 'Conventional'
             elif 1992 <= row['ANY_FABRICACIO'] < 1996:
