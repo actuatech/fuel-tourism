@@ -1,11 +1,10 @@
+import numpy as np
+import pandas as pd
 from datetime import timedelta, datetime
 
+from .ActivityChecks import check_if_timedelta_greater_than_minimum_days
 
-# TODO eliminar 2020. S'ha de veure tema itv intermitja. març 2020 limit. km de 2018 i 2019
-# columna days, km, activity pel vehicle, mitjana per categoria.
-# per cada categoria; hoistograma mitja, mitjana, desviacio per l'activitat'
-# filtre per data anterior
-import pandas as pd
+DAYS_IN_A_YEAR = 365
 
 
 def time_between_dates(date1: datetime, date2: datetime) -> timedelta:
@@ -17,47 +16,75 @@ def time_between_dates(date1: datetime, date2: datetime) -> timedelta:
         print(f'Unable to compare date1 and date2. Error: {e}')
 
 
-def check_if_timedelta_greater_than_minimum_days(time_difference: timedelta, min_days: int) -> bool:
-    """Check if timedelta greater than a minimum number of days"""
-    if time_difference > timedelta(days=min_days):
-        return True
-    else:
-        return False
+def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days_between_revisions: int = 300) -> int:
+    """
+    Calculate the time in days between 2 consecutives itv revisions and the corresponding mileage.
+     Only if:
+        - the revisions are separated by a minimum number of days (avoiding therefore revisions not passed)
+        If not, takes the next consecutives revisions into account and so on until last revisions is reached.
+        - the revisions are made before a given date (to avoid for example post covid activity paterns)
 
-
-def time_between_itv_revisions(row, min_days_between_revisions: int = 330) -> int:
-    """Return the time in days between 2 consecutives itv revisions, if those revisions are separated by a min time"""
-
-    if pd.notna(row['DATA_DARRERA_ITV']):  # If there is a itv revision
-        if pd.notna(row['DATA_DARRERA_ITV2']):  # If there is a second itv revision
+    :param row: vehicle pd.Serie from register dataframe
+    :param max_date: max date to take into account
+    :param min_days_between_revisions: minimum number of days between revisions
+    :return: tuple (number of days between revisions, mileage between those revisions in Km, activity in km/year)
+    """
+    if pd.notna(row['DATA_DARRERA_ITV']) and row['DATA_DARRERA_ITV'] < max_date:
+        if pd.notna(row['DATA_DARRERA_ITV2']) and row['DATA_DARRERA_ITV2'] < max_date:
             timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV'], row['DATA_DARRERA_ITV2'])
+
             if check_if_timedelta_greater_than_minimum_days(timedelta_revisions, min_days_between_revisions):
-                return timedelta_revisions.days
-            else:
-                timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV2'], row['DATA_DARRERA_ITV3'])
-                if check_if_timedelta_greater_than_minimum_days(timedelta_revisions, min_days_between_revisions):
-                    return timedelta_revisions.days
+                mileage = row['KM_DARRERA_ITV'] - row['KM_DARRERA_ITV2']
+                if mileage > 0:
+                    activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
+                    return timedelta_revisions.days, mileage, abs(activity)
                 else:
-                    print('Vehicle with TWO revisions very close to the previous one ')
-                    print('row')
+                    print('Error de kilometratge: ')
+                    print(row)
                     print('-')
-                    timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV3'], row['DATA_DARRERA_ITV4'])
+            else:
+                if pd.notna(row['DATA_DARRERA_ITV3']) and row['DATA_DARRERA_ITV3'] < max_date:
+                    timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV2'], row['DATA_DARRERA_ITV3'])
+
                     if check_if_timedelta_greater_than_minimum_days(timedelta_revisions, min_days_between_revisions):
-                        return timedelta_revisions.days
-                    else:
-                        print('Vehicle with THREE revisions very close to the previous one ')
-                        print('row')
-                        print('-')
-                        timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV4'], row['DATA_DARRERA_ITV5'])
-                        if check_if_timedelta_greater_than_minimum_days(timedelta_revisions,
-                                                                        min_days_between_revisions):
-                            return timedelta_revisions.days
+                        mileage = row['KM_DARRERA_ITV2'] - row['KM_DARRERA_ITV3']
+                        if mileage > 0:
+                            activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
+                            return timedelta_revisions.days, mileage, activity
                         else:
-                            print('Vehicle with FOUR revisions very close to the previous one ')
-                            print('row')
+                            print('Error de kilometratge: ')
+                            print(row)
                             print('-')
-                            return None
-        else:
-            return None
-    else:
-        return None
+                    else:
+                        if pd.notna(row['DATA_DARRERA_ITV4']) and row['DATA_DARRERA_ITV4'] < max_date:
+                            timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV3'], row['DATA_DARRERA_ITV4'])
+
+                            if check_if_timedelta_greater_than_minimum_days(timedelta_revisions,
+                                                                            min_days_between_revisions):
+                                mileage = row['KM_DARRERA_ITV3'] - row['KM_DARRERA_ITV4']
+                                if mileage > 0:
+                                    activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
+                                    return timedelta_revisions.days, mileage, activity
+                                else:
+                                    print('Error de kilometratge: ')
+                                    print(row)
+                                    print('-')
+                            else:
+                                if pd.notna(row['DATA_DARRERA_ITV5']) and row['DATA_DARRERA_ITV5'] < max_date:
+                                    timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV4'],
+                                                                             row['DATA_DARRERA_ITV5'])
+
+                                    if check_if_timedelta_greater_than_minimum_days(timedelta_revisions,
+                                                                                    min_days_between_revisions):
+                                        mileage = row['KM_DARRERA_ITV4'] - row['KM_DARRERA_ITV5']
+                                        if mileage > 0:
+                                            activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
+                                            return timedelta_revisions.days, mileage, activity
+                                        else:
+                                            print('Error de kilometratge: ')
+                                            print(row)
+                                            print('-')
+                                    else:
+                                        return np.nan, np.nan, np.nan
+
+    return np.nan, np.nan, np.nan
