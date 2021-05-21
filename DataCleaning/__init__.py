@@ -1,6 +1,8 @@
 from .Filters import (
-    drop_vehicles_agricols,
+    drop_agricultural_vehicles,
     filter_by_year_greater_than,
-    drop_vehicles_sense_carburant
+    drop_vehicles_with_no_fuel_associated,
+    keep_row_if_na_in_column,
+    filter_by_year_smaller_than
 )
 

@@ -6,7 +6,7 @@ def filter_by_year_greater_than(registre_df: pd.DataFrame, colname: str, date) -
     return registre_df[registre_df[colname] > date]
 
 
-def keep_row_if_na_in_column(registre_df: pd.DataFrame, colname: str)-> pd.DataFrame:
+def keep_row_if_na_in_column(registre_df: pd.DataFrame, colname: str) -> pd.DataFrame:
     return registre_df[registre_df[colname].isna()]
 
 
@@ -20,3 +20,7 @@ def drop_vehicles_with_no_fuel_associated(registre_df: pd.DataFrame) -> pd.DataF
     num_vehicles_no_fuel = registre_df[registre_df.CARBURANT == 'SENSE CARBURANT'].shape[0]
     print(f'Total number of vehicles with no fuel associated deleted: {num_vehicles_no_fuel}')
     return registre_df[registre_df['CARBURANT'] != 'SENSE CARBURANT']
+
+
+def filter_by_year_smaller_than(registre_df: pd.DataFrame, colname: str, date) -> pd.DataFrame:
+    return registre_df[registre_df[colname] < date]
