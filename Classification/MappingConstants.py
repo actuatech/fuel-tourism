@@ -22,6 +22,56 @@ FUEL_MAPPING_DICT = {       # De moment no hi han vehicles amb Gas Natural, si a
     'ELEC. AUTO. ESTESA': 'Battery electric'  # Només hi ha el BMW I3 amb aquest carburant (elec)
 }
 
+mapping_category_last_euro_standard_dict = {
+    'Passenger Cars': {
+        'last_euro': 'Euro 6 d-temp',
+        'second_last_euro': 'Euro 6 a/b/c',
+                       },
+    'Light Commercial Vehicles': {
+            'last_euro': 'Euro 6 d-temp',
+            'second_last_euro': 'Euro 6 a/b/c',
+                           },
+    'L-Category': {
+        'last_euro': 'Euro 5',
+        'second_last_euro': 'Euro 4',
+    },
+    'Heavy Duty Trucks': {
+        'last_euro': 'Euro VI D/E',
+        'second_last_euro': 'Euro VI A/B/C',
+    },
+    'Buses': {
+            'last_euro': 'Euro VI D/E',
+            'second_last_euro': 'Euro VI A/B/C',
+        }
+}
+
+MAPPING_CATEGORY_LAST_EURO_STANDARD = {
+    'Passenger Cars': {
+        'last_euro': 'Euro 6 d-temp',
+        'second_last_euro': 'Euro 6 a/b/c',
+                       },
+    'Light Commercial Vehicles': {
+            'last_euro': 'Euro 6 d-temp',
+            'second_last_euro': 'Euro 6 a/b/c',
+                           },
+    'L-Category': {
+        'last_euro': 'Euro 5',
+        'second_last_euro': 'Euro 4',
+    },
+    'Heavy Duty Trucks': {
+        'last_euro': 'Euro VI D/E',
+        'second_last_euro': 'Euro VI A/B/C',
+    },
+    'Buses': {
+            'last_euro': 'Euro VI D/E',
+            'second_last_euro': 'Euro VI A/B/C',
+        }
+}
+
+
+
+
+
 TECHONOLOGY_MAPPING_DICT = {
     ''
 }
