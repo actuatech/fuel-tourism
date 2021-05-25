@@ -3,58 +3,13 @@ import pandas as pd
 from typing import List, Dict
 
 from .AggregationFunctions import groupby_partitions, filter_groupby_partitions
+from .ActivityChecks import check_activity_bigger_than_value_and_assign_to_nan
 
-mapping_category_last_euro_standard_dict = {
-    'Passenger Cars': {
-        'last_euro': 'Euro 6 d-temp',
-        'second_last_euro': 'Euro 6 a/b/c',
-                       },
-    'Light Commercial Vehicles': {
-            'last_euro': 'Euro 6 d-temp',
-            'second_last_euro': 'Euro 6 a/b/c',
-                           },
-    'L-Category': {
-        'last_euro': 'Euro 5',
-        'second_last_euro': 'Euro 4',
-    },
-    'Heavy Duty Trucks': {
-        'last_euro': 'Euro VI D/E',
-        'second_last_euro': 'Euro VI A/B/C',
-    },
-    'Buses': {
-            'last_euro': 'Euro VI D/E',
-            'second_last_euro': 'Euro VI A/B/C',
-        }
-}
 NUM_OF_DAYS_PER_YEAR = 365
 
 groupby = ['Category', 'Fuel', 'Segment', 'Euro Standard']
 HYBRID_PHEV_TYPES = ['Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']
 CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'L-Category', 'Buses', 'Heavy Duty Trucks']
-
-
-def function_create_mean_activity_column(row: pd.Series, min_counts: int = 100):
-    """
-    Function to apply to a Dataframe to create a new column with the mean activity
-    :param row: row of Dataframe with following columns ['Category', 'Fuel', 'Segment', 'Euro Standard', 'Num_of_days',
-       'Mileage', 'COUNT']
-    :param min_counts: minimum number of vehicle counts per agregation for the man activity calculated to be valid
-    :return: Mean activity or nan
-    """
-    try:
-        activity = row['Mileage'] / row['Num_of_days'] * 365  # km/year
-    except ZeroDivisionError:
-        activity = np.nan
-
-    if row['Fuel'] == 'Battery electric':
-        return activity
-
-    if row['COUNT'] < min_counts:
-        return np.nan
-    elif activity == 0:
-        return np.nan
-    else:
-        return activity
 
 
 def mean_activity_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitions: List, min_counts: int,

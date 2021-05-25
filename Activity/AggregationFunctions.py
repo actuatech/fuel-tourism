@@ -13,14 +13,13 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
     :param partitions: must be one or more of :  ['Category', 'Fuel', 'Segment', 'Euro Standard']
     :return: grouped pd.Dataframe for the given partitions
     """
-    # TODO: comprovar perque a vegades es calcula d'una forma i d'altre d'un altra'
     NUM_OF_DAYS_PER_YEAR = 365
     try:
         groupby = vehicles_df.groupby(
             partitions, dropna=False, as_index=False).agg(
-            {'Activity': 'sum', 'COUNT': 'sum', 'Mileage': 'sum', 'Num_of_days': 'sum'})
+            {'Activity': 'mean', 'COUNT': 'sum', 'Mileage': 'sum', 'Num_of_days': 'sum'}).rename(
+            {'Activity': 'Mean_Activity'}, axis=1)
 
-        groupby['Mean_Activity'] = groupby['Mileage'] / groupby['Num_of_days'] * NUM_OF_DAYS_PER_YEAR
     except Exception:
         raise Exception(f'Unable to groupby {partitions}, the vehicles dataframe')
 
