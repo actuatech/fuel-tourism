@@ -45,3 +45,4 @@ MAPPING_CATEGORY_LAST_EURO_STANDARD = {
         }
 }
 CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'Heavy Duty Trucks', 'Buses', 'L-Category']
+HYBRID_PHEV_TYPES = ['Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']
