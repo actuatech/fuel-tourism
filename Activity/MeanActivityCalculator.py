@@ -5,12 +5,6 @@ from typing import List, Dict
 from .AggregationFunctions import groupby_partitions, filter_groupby_partitions
 from .ActivityChecks import check_for_activity_outliers
 
-NUM_OF_DAYS_PER_YEAR = 365
-
-groupby = ['Category', 'Fuel', 'Segment', 'Euro Standard']
-HYBRID_PHEV_TYPES = ['Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']
-CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'L-Category', 'Buses', 'Heavy Duty Trucks']
-
 
 def mean_activity_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitions: List, min_counts: int,
                              euro_standard: str = None) -> float:
@@ -48,23 +42,21 @@ def mean_activity_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitio
     return np.nan
 
 
-def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last_euro_standard: Dict,
-                                         min_counts: int = 100):
-    # ROW of Activity Dataframe / V is vehicles dataframe
+def mean_activity_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFrame,
+                                         mapping_category_last_euro_standard: Dict, min_counts: int = 100) -> float:
     """
+    Calculates the mean activity for a given vehicle (row) by grouping it and returns the mean activity of the group
+    if the grouping has a minimum of stock.
+    There is a sequential grouping, with priorities on Category, Fuel, Euro Standard and Segment.
 
     :param row: row of the stock (pd.Dataframe.groupby), it is an aggregation of vehicles with columns
      ['Category', 'Fuel', 'Segment', 'Euro Standard', 'Num_of_days', 'Mileage', 'COUNT', 'Mean_Activity']
-    :param vehicles_df:
-    :param mapping_category_last_euro_standard:
-    :param min_counts:
-    :return:
+    :param vehicles_df: categorized Dataframe of the vehicles fleet
+    :param mapping_category_last_euro_standard: dict that maps each category with it's last realeased Euro Standard
+    :param min_counts: minimum stock size to take the resulting mean activity of the agrupation as valid
+    :return: Mean activity of the agrupation that first matches the minimum stock required to assigned to the given row
     """
-    """
-    # Last Euro Standard for L-Category matches an intermidiate Euro Standard for passenger Cars
-    Columns with mean activity must be nan before executing the function
 
-    """
     row_euro_standard_mapping = mapping_category_last_euro_standard[row['Category']]
 
     if row['Category'] in CATEGORIES:
@@ -160,16 +152,3 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
     else:
         raise Exception(f'Category type not found for vehicle: \n {row} \n')
 
-
-"""  
-def assign_mean_activity_to_df(mean_activity_df: pd.DataFrame, category, fuel_ls, segment_ls, euro_ls,
-                               mean_activity_to_assign: float):
-    df = mean_activity_df.copy()
-    df.loc[
-        (df['Category'].isin(category)) &
-        (df['Fuel'].isin(fuel_ls)) &
-        (df['Segment'].isin(segment_ls)) &
-        (df['Euro Standard'].isin(euro_ls)), 'Mean_Activity'
-    ] = mean_activity_to_assign
-    return df
-"""
