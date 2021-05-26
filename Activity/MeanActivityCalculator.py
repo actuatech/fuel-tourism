@@ -4,6 +4,7 @@ from typing import List, Dict
 
 from .AggregationFunctions import groupby_partitions, filter_groupby_partitions
 from .ActivityChecks import check_for_activity_outliers
+from Classification.MappingConstants import CATEGORIES, HYBRID_PHEV_TYPES
 
 
 def mean_activity_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitions: List, min_counts: int,
