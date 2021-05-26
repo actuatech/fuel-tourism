@@ -37,7 +37,7 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                 mileage = row['KM_DARRERA_ITV'] - row['KM_DARRERA_ITV2']
                 if mileage > 0:
                     activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
-                    return timedelta_revisions.days, mileage, abs(activity)
+                    return timedelta_revisions.days, mileage, round(abs(activity), 0)
                 else:
                     print('Error de kilometratge: ')
                     print(row)
@@ -50,7 +50,7 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                         mileage = row['KM_DARRERA_ITV2'] - row['KM_DARRERA_ITV3']
                         if mileage > 0:
                             activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
-                            return timedelta_revisions.days, mileage, activity
+                            return timedelta_revisions.days, mileage, round(abs(activity), 0)
                         else:
                             print('Error de kilometratge: ')
                             print(row)
@@ -64,7 +64,7 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                                 mileage = row['KM_DARRERA_ITV3'] - row['KM_DARRERA_ITV4']
                                 if mileage > 0:
                                     activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
-                                    return timedelta_revisions.days, mileage, activity
+                                    return timedelta_revisions.days, mileage, round(abs(activity), 0)
                                 else:
                                     print('Error de kilometratge: ')
                                     print(row)
@@ -79,7 +79,7 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                                         mileage = row['KM_DARRERA_ITV4'] - row['KM_DARRERA_ITV5']
                                         if mileage > 0:
                                             activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
-                                            return timedelta_revisions.days, mileage, activity
+                                            return timedelta_revisions.days, mileage, round(abs(activity), 0)
                                         else:
                                             print('Error de kilometratge: ')
                                             print(row)

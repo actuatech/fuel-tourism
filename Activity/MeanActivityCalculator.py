@@ -3,7 +3,7 @@ import pandas as pd
 from typing import List, Dict
 
 from .AggregationFunctions import groupby_partitions, filter_groupby_partitions
-from .ActivityChecks import check_activity_bigger_than_value_and_assign_to_nan
+from .ActivityChecks import check_for_activity_outliers
 
 NUM_OF_DAYS_PER_YEAR = 365
 
@@ -26,7 +26,7 @@ def mean_activity_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitio
     :param partitions: must be one or more of :  ['Category', 'Fuel', 'Segment', 'Euro Standard']
     :param min_counts: minimum number of vehicles to be grouped within the given partitions to take the
     mean activity calculation as valid.
-    :param euro_standard:
+    :param euro_standard: Value of the second last Euro Standard for the row(vehicle) Category
     :return: The calculated mean activity for the corresponding grouping or np.nan if min_counts condition is not meet
     """
 
@@ -76,7 +76,7 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
                 mean_activity = mean_activity_calculator(vehicles_df, row, partitions, min_counts)
                 if pd.notna(mean_activity):
                     print(f'Mean activity with aggregation by Category, Fuel and Euro Standard assigned to: \n {row}')
-                    return mean_activity
+                    return round(mean_activity, 0)
 
             # Assigning the Mean Activity of the previous Euro Standard (for new vehicles with no ITV mileage info)
             else:
@@ -86,7 +86,7 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
                                                          assigned_euro_standard)
                 if pd.notna(mean_activity):
                     print(f'Mean activity taken from previous Euro Standard assigned to \n {row}')
-                    return mean_activity
+                    return round(mean_activity, 0)
                 # Assigning the Mean Activity of the previous Euro Standard and NO Fuel aggregation
                     # for new vehicles with no ITV mileage info
                 partitions = ['Category', 'Segment', 'Euro Standard']
@@ -95,14 +95,14 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
                 if pd.notna(mean_activity):
                     print(f'Mean activity taken from previous Euro Standard, with no fuel aggregation assigned to:'
                           f' \n {row}')
-                    return mean_activity
+                    return round(mean_activity, 0)
 
             # Aggregation by Category, Fuel, Segment
             partitions = ['Category', 'Fuel', 'Segment']
             mean_activity = mean_activity_calculator(vehicles_df, row, partitions, min_counts)
             if pd.notna(mean_activity):
                 print(f'Mean activity with aggregation by Category, Fuel and Segment assigned to: \n {row}')
-                return mean_activity
+                return round(mean_activity, 0)
 
             # For minoritary fuel types like hybrid and PHEV, aggregation by fuel is dropped
             if (row['Fuel'] in HYBRID_PHEV_TYPES) and (row['Euro Standard'] != row_euro_standard_mapping['last_euro'])\
@@ -112,14 +112,14 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
                 if pd.notna(mean_activity):
                     print(f'Mean activity with aggregation by Category, Segment and Euro Standard assigned to '
                           f'minoritary fuel vehicle: \n {row}')
-                    return mean_activity
+                    return round(mean_activity, 0)
 
             # Just group by Segment and Category
             partitions = ['Category', 'Segment']
             mean_activity = mean_activity_calculator(vehicles_df, row, partitions, min_counts)
             if pd.notna(mean_activity):
                 print(f'Mean activity with aggregation by Category and Segment assigned to vehicle: \n {row}')
-                return mean_activity
+                return round(mean_activity, 0)
 
             # Just group by Fuel and Category
             partitions = ['Category', 'Fuel']
@@ -127,7 +127,7 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
             if pd.notna(mean_activity):
                 print(f'Mean activity with aggregation by Category and Fuel assigned to vehicle:'
                       f' \n {row}')
-                return mean_activity
+                return round(mean_activity, 0)
 
             # If previous partitions are not enough, just group by Category
             partitions = ['Category']
@@ -142,7 +142,7 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
             mean_activity = mean_activity_calculator(vehicles_df, row, partitions, min_counts)
             if pd.notna(mean_activity):
                 print(f'Mean activity aggregating by Category and Segment assigned to  electrical vehicle: \n {row}')
-                return mean_activity
+                return round(mean_activity, 0)
 
         # Vehicles with no Euro Standard
         elif pd.isna(row['Euro Standard']) and pd.isna(row['Mean_Activity']):
@@ -150,7 +150,7 @@ def mean_activity_calculator_by_grouping(row, vehicles_df, mapping_category_last
             mean_activity = mean_activity_calculator(vehicles_df, row, partitions, min_counts)
             if pd.notna(mean_activity):
                 print(f'Mean activity NOT aggregating by Euro Standard assigned to \n {row}')
-                return mean_activity
+                return round(mean_activity, 0)
 
         else:
             if pd.notna(row['Mean_Activity']):  # Keep Category/Fuel/Segment/Euro previously calculated mean activity
