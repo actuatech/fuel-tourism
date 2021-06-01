@@ -8,7 +8,7 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
     """
 
     if row['Category'] == 'Passenger Cars':
-        if row['Fuel'] != 'Battery electric':  # No Euro Category for electric cars
+        if row['Fuel'] != 'Battery Electric':  # No Euro Category for electric cars
             if row['ANY_FABRICACIO'] < 1978:
                 return 'ECE 15/00-01'
             elif 1978 < row['ANY_FABRICACIO'] < 1981:
@@ -98,12 +98,11 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                     return 'Euro 6 d-temp'
                 elif row['ANY_FABRICACIO'] >= 2021:
                     return 'Euro 6 d'
-            elif row['Fuel'] == 'Battery electric':
+            elif row['Fuel'] == 'Battery Electric':
                 return None
 
     # Technology classification of Heavy Duty Trucks
     elif row['Category'] == 'Heavy Duty Trucks':
-        # TODO: verificar si hi han Euro Standards per Diesel Hybrid i altres
         if row['Fuel'] == 'Diesel' or row['Fuel'] == 'Petrol' or row['Fuel'] == 'Diesel Hybrid':
             if row['ANY_FABRICACIO'] < 1992:
                 return 'Conventional'
@@ -179,3 +178,4 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
         print('Vehicle with no Category')
         print(row)
         print('-')
+        return None

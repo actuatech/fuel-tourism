@@ -17,7 +17,6 @@ def anti_join_all_cols(x, y):
 def reclassification_light_commercial_to_heavy_duty_trucks(register_df: pd.DataFrame) -> pd.DataFrame:
     """
     Replace Category to Heavy Duty Trucks for Light Commercial Vehicles of weight above 3500kg.
-    Solventa el problema del incorrecte registre de vehicles TIPUS CAMIONETES que haurien de ser TIPUS FURGONETES
     """
     anti = register_df[(register_df['TIPUS'] == 'CAMIONETES') &
                        (register_df['PES_BUIT'] >= 3500) &
