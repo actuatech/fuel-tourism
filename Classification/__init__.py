@@ -1,5 +1,5 @@
 from .ClassificationWrapper import category_fuel_segment_euro_classification_wrapper_function
-from .MappingConstants import MAPPING_CATEGORY_LAST_EURO_STANDARD
+from .MappingConstants import MAPPING_CATEGORY_LAST_EURO_STANDARD, CATEGORIES, HYBRID_PHEV_TYPES
 
 """from .MappingFunctions import category_mapper_itv_copert, fuel_mapper_itv_copert
 from .CopertSegmentIdentification import segment_identification_for_each_category

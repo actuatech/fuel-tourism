@@ -28,7 +28,7 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
 
         # Segment classification of Light Commercial Vehicles
         elif row['Category'] == 'Light Commercial Vehicles':
-            if 600 < row['PES_BUIT'] <= 1305:
+            if 500 < row['PES_BUIT'] <= 1305:
                 return 'N1-I'
             elif 1305 < row['PES_BUIT'] <= 1760:
                 return 'N1-II'

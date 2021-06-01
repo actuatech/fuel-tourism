@@ -23,6 +23,11 @@ from Activity import (
     calculate_activity_outliers_thresholds,
     mean_activity_calculator_by_grouping
 )
+from Graphing import(
+    euro_distribution_pie_charts,
+    stock_per_category_pie_chart,
+    stock_per_manufacturing_year_and_category_bar_charts
+)
 
 # ----------
 # PARAMETERS
@@ -38,10 +43,13 @@ MAX_DATE = datetime(2021, 1, 1)
 MIN_DAYS_BETWEEN_REVISIONS = 300
 MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid
 
+# Output folder for results:
+output_folder = '/Users/nilcelisfont/dev/fuel-turism/ouput/'
+
 # Output filename of cleaned and categorized data:
-filename_output_categorized_vehicle_data = f'Registre_vehicles_{datetime.now().date()}.csv'
+filename_output_categorized_vehicle_data = output_folder + f'Registre_vehicles_{datetime.now().date()}.csv'
 # Output filename for stock and activity dataframe
-filename_output_stock_activity = f'stock_activity_2019_{datetime.now().date()}.csv'
+filename_output_stock_activity = output_folder + f'stock_activity_2019_{datetime.now().date()}.csv'
 
 # ----
 # CODE
@@ -50,6 +58,8 @@ filename_output_stock_activity = f'stock_activity_2019_{datetime.now().date()}.c
 # Define the current working directory
 cwd = Path.cwd()
 path_registre_vehicles = cwd / '_data' / filename_registre_vehicles
+
+
 
 # LOADING DATA
 print('Loading registre de vehicles')
@@ -110,4 +120,9 @@ try:
     stock_and_mileage_df.drop(['Mileage'], axis=1).to_csv(filename_output_stock_activity)
 except Exception:
     raise Exception('Unable to save stock and activity to file')
+
+print('Loading charts')
+stock_per_category_pie_chart(categorized_vehicles_df, output_folder)
+euro_distribution_pie_charts(categorized_vehicles_df, output_folder)
+stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df, output_folder)
 print('end')
