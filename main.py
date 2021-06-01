@@ -1,3 +1,6 @@
+# TODO: Preparar fitxer per fer que ingesta no peti en cas que les columnes del fitxer siguin diferents
+# TODO: no tenir en compte activitat per sobre el 15 de març del 2020
+
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -27,6 +30,7 @@ from Activity import (
 # ITV original data filename (Parameter)
 filename_registre_vehicles = '01FEB2021_Historic_vehicles_amb_ITVs.xlsx'
 
+# 01FEB2021_Historic_vehicles_amb_ITVs
 # Years between from which data is keeped
 MIN_YEAR = 1989
 MAX_DATE = datetime(2021, 1, 1)
@@ -34,12 +38,15 @@ MAX_DATE = datetime(2021, 1, 1)
 MIN_DAYS_BETWEEN_REVISIONS = 300
 MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid
 
+# Output filename of cleaned and categorized data:
+filename_output_categorized_vehicle_data = f'Registre_vehicles_{datetime.now().date()}.csv'
 # Output filename for stock and activity dataframe
-filename_output_stock_activity = f'stock_activity_{datetime.now().date()}.csv'
+filename_output_stock_activity = f'stock_activity_2019_{datetime.now().date()}.csv'
 
 # ----
 # CODE
 # ----
+
 # Define the current working directory
 cwd = Path.cwd()
 path_registre_vehicles = cwd / '_data' / filename_registre_vehicles
@@ -76,28 +83,31 @@ categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], cate
 activity_outliers_per_category_mapping = calculate_activity_outliers_thresholds(categorized_vehicles_df)
 categorized_vehicles_df['Activity'] = categorized_vehicles_df.apply(
     lambda row: check_for_activity_outliers(row, activity_outliers_per_category_mapping), axis=1)
+
+# Save cleaned, categorized data and vehicle activity to csv
+print('Saving cleaned, categorized data and vehicle activity to csv')
+categorized_vehicles_df.to_csv(filename_output_categorized_vehicle_data)
+
 # Create Stock Column
-categorized_vehicles_df['COUNT'] = 1
+categorized_vehicles_df['Stock'] = 1
 
 # Calculate stock and mean activity for each partition
 stock_and_mileage_df = categorized_vehicles_df.groupby(
             ['Category', 'Fuel', 'Segment', 'Euro Standard'], dropna=False, as_index=False).agg(
-            {'Activity': 'mean', 'COUNT': 'sum', 'Mileage': 'sum'}).rename({'Activity': 'Mean_Activity'}, axis=1)
+            {'Activity': 'mean', 'Stock': 'sum', 'Mileage': 'sum'}).rename({'Activity': 'Mean_Activity'}, axis=1)
 
 # Calculate mean activity for partitions with no mean activity by assigning them from different partitions
 stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df.apply(
     lambda row: mean_activity_calculator_by_grouping(row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD,
                                                      MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION), axis=1)
 try:
-    # TODO: veure perquè passar això i solucionar-ho
     stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df['Mean_Activity'].astype(int)
-    stock_and_mileage_df['Mileage'] = stock_and_mileage_df['Mileage'].astype(int)
-except Exception:
-    print('Check for nan values in the stock_and_mileage dataframe: Mean activity or Mileage')
+except ValueError:
+    print('Check for nan values in the stock_and_mileage dataframe: Mean activity')
 
-# Save results
+# Save wanted results
 try:
-    stock_and_mileage_df.to_csv(filename_output_stock_activity)
+    stock_and_mileage_df.drop(['Mileage'], axis=1).to_csv(filename_output_stock_activity)
 except Exception:
     raise Exception('Unable to save stock and activity to file')
 print('end')
