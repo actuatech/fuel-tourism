@@ -1,6 +1,8 @@
 import pandas as pd
 import plotly.express as px
 
+from Graphing.Colors import COLOR_DISCRETE_MAP
+
 
 def stock_per_category_pie_chart(categorized_vehicles_df: pd.DataFrame, output_folder: str):
     """
@@ -11,11 +13,12 @@ def stock_per_category_pie_chart(categorized_vehicles_df: pd.DataFrame, output_f
     :return: an html file with a chart containing the whole Stock distribution by Category
     """
     data = categorized_vehicles_df.groupby(['Category']).count()['Stock'].reset_index()
-    pie_chart = px.pie(data, values='Stock', names='Category',
-                       title='Estoc segons tipologia de vehicle')
+    pie_chart = px.pie(data, values='Stock', names='Category', color='Category',
+                       title='Estoc segons tipologia de vehicle',
+                       color_discrete_map=COLOR_DISCRETE_MAP)
     pie_chart.update_traces(
         textinfo='percent+value',
-        texttemplate= '%{value:0f} \n\  %{percent:0%f}'
+        texttemplate='%{value:0f} \n\  %{percent:0%f}'
     )
 
     pie_chart.update_layout(
