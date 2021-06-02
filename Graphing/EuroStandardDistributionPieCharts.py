@@ -11,7 +11,7 @@ def euro_distribution_pie_charts(categorized_vehicles_df: pd.DataFrame, output_f
 
     :param categorized_vehicles_df: Dataframe of the categorized vehicles registration list
     :param output_folder: output folder name where to store resulting chart
-    :return: a plotly.Figure containing the EURO distribution pie charts
+    :return: an html file containing the EURO distribution pie charts per each Category
     """
     # Subplots definition
     specs = [[{'type': 'domain'}, {'type': 'domain'}], [{'type': 'domain'}, {'type': 'domain'}],

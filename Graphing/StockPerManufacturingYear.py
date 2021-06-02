@@ -58,8 +58,14 @@ def create_chart_with_segmentation_and_colors_configuration(data: pd.DataFrame, 
     return fig
 
 
-def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df: pd.DataFrame,
-                                                         output_folder: str) -> px.Figure:
+def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df: pd.DataFrame, output_folder: str):
+    """
+    Save to and html file a bar chart representing the stock distribution per year of manufacturing, per segment and
+    per fuel type. One chart for each vehicle category
+    :param categorized_vehicles_df: Dataframe of the categorized vehicles registration list
+    :param output_folder: output folder name where to store resulting chart
+    :return: an html file containing the 5 bar charts, one for each vehicle Category
+    """
     # Passenger Cars chart:
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'Passenger Cars'].groupby(
         ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()

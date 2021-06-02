@@ -2,13 +2,13 @@ import pandas as pd
 import plotly.express as px
 
 
-def stock_per_category_pie_chart(categorized_vehicles_df: pd.DataFrame, output_folder: str) -> px.Figure:
+def stock_per_category_pie_chart(categorized_vehicles_df: pd.DataFrame, output_folder: str):
     """
     Pie Chart of the stock by Category
 
     :param categorized_vehicles_df: Dataframe of the categorized vehicles registration list
     :param output_folder: output folder name where to store resulting chart
-    :return: a plotly.Figure containing the whole Stock distribution pie chart
+    :return: an html file with a chart containing the whole Stock distribution by Category
     """
     data = categorized_vehicles_df.groupby(['Category']).count()['Stock'].reset_index()
     pie_chart = px.pie(data, values='Stock', names='Category',
