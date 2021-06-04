@@ -26,7 +26,7 @@ def activity_stats_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partiti
     mean activity calculation as valid.
     :param euro_standard: Value of the second last Euro Standard for the row(vehicle) Category
     :param fuel_type: Value of the Fuel type to filter on
-    :return: The calculated mean activity for the corresponding grouping or np.nan if min_stock condition is not meet
+    :return: The calculated activity statistics for the corresponding grouping or np.nan if min_stock condition not meet
     """
 
     # Grouping vehicles dataframe by given partitions and filter it to match partitions of the given row of Dataframe
