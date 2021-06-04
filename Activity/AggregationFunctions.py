@@ -17,8 +17,14 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
     try:
         groupby = vehicles_df.groupby(
             partitions, dropna=False, as_index=False).agg(
-            {'Activity': 'mean', 'Stock': 'sum', 'Mileage': 'sum', 'Num_of_days': 'sum'}).rename(
-            {'Activity': 'Mean_Activity'}, axis=1)
+            Stock=('Stock', 'sum'),
+            Mileage=('Mileage', 'sum'),
+            Min_Activity=('Activity', 'min'),
+            Max_Activity=('Activity', 'max'),
+            Std_Activity=('Activity', 'std'),
+            Mean_Activity=('Activity', 'mean'),
+            Notna_Count=('Activity', 'count')
+        )
 
     except Exception:
         raise Exception(f'Unable to groupby {partitions}, the vehicles dataframe')
@@ -26,11 +32,11 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
     return groupby
 
 
-def filter_groupby_partitions(groupby: pd.DataFrame.groupby, row: pd.Series, euro_standard: str, fuel_type: str)\
+def filter_groupby_partitions(groupby: pd.DataFrame.groupby, row: pd.Series, euro_standard: str, fuel_type: str) \
         -> pd.DataFrame.groupby:
     """
     Filters the groupby dataframe to match the values of the given row for the partitions:
-    :param groupby: grouped vehicles dataframe
+    :param groupby: original dataframe
     :param row: row of the vehicles dataframe
     :param euro_standard: Value of the second last Euro Standard for the row(vehicle) Category
     :param fuel_type: fuel type to take into account for filtering (Hybrid types)
@@ -46,5 +52,22 @@ def filter_groupby_partitions(groupby: pd.DataFrame.groupby, row: pd.Series, eur
         filtered_groupby = filtered_groupby[(filtered_groupby['Segment'] == row['Segment'])]
     if 'Fuel' in partitions:
         filtered_groupby = filtered_groupby[(filtered_groupby['Fuel'] == fuel_type)]
+
+    return filtered_groupby
+
+
+def filter_by_partitions(df: pd.DataFrame, category=None, fuel=None, segment=None, euro=None):
+    """
+    Filters the groupby dataframe to match the values of the given partitions
+    """
+    filtered_groupby = df.copy()
+    if euro:
+        filtered_groupby = filtered_groupby[(filtered_groupby['Euro Standard'] == euro)]
+    if category:
+        filtered_groupby = filtered_groupby[(filtered_groupby['Category'] == category)]
+    if segment:
+        filtered_groupby = filtered_groupby[(filtered_groupby['Segment'] == segment)]
+    if fuel:
+        filtered_groupby = filtered_groupby[(filtered_groupby['Fuel'] == fuel)]
 
     return filtered_groupby

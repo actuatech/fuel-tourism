@@ -21,7 +21,7 @@ from Activity import (
     activity_time_and_km_between_itv_revisions,
     check_for_activity_outliers,
     calculate_activity_outliers_thresholds,
-    mean_activity_calculator_by_grouping
+    activity_stats_calculator_by_grouping
 )
 from Graphing import(
     euro_distribution_pie_charts,
@@ -108,8 +108,8 @@ stock_and_mileage_df = categorized_vehicles_df.groupby(
 
 # Calculate mean activity for partitions with no mean activity by assigning them from different partitions
 stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df.apply(
-    lambda row: mean_activity_calculator_by_grouping(row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD,
-                                                     MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION), axis=1)
+    lambda row: activity_stats_calculator_by_grouping(row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD,
+                                                      MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION), axis=1)
 try:
     stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df['Mean_Activity'].astype(int)
 except ValueError:

@@ -4,4 +4,4 @@ from .ActivityChecks import (
     check_if_timedelta_greater_than_minimum_days,
     calculate_activity_outliers_thresholds
 )
-from .MeanActivityCalculator import mean_activity_calculator_by_grouping
+from .MeanActivityCalculator import activity_stats_calculator_by_grouping
