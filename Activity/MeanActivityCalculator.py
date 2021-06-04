@@ -64,7 +64,8 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
     :param vehicles_df: categorized Dataframe of the vehicles fleet
     :param mapping_category_last_euro_standard: dict that maps each category with it's last realeased Euro Standard
     :param min_stock: minimum stock size to take the resulting mean activity of the agrupation as valid
-    :return: Mean activity of the agrupation that first matches the minimum stock required to assigned to the given row
+    :return: Mean activity statisitcs of the agrupation that first matches the minimum stock required to assigned to
+     the given row
     """
 
     row_euro_standard_mapping = mapping_category_last_euro_standard[row['Category']]
