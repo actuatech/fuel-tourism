@@ -26,22 +26,27 @@ MAPPING_CATEGORY_LAST_EURO_STANDARD = {
     'Passenger Cars': {
         'last_euro': 'Euro 6 d-temp',
         'second_last_euro': 'Euro 6 a/b/c',
+        'third_last_euro': 'Euro 5'
                        },
     'Light Commercial Vehicles': {
             'last_euro': 'Euro 6 d-temp',
             'second_last_euro': 'Euro 6 a/b/c',
+            'third_last_euro': 'Euro 5'
                            },
     'L-Category': {
         'last_euro': 'Euro 5',
         'second_last_euro': 'Euro 4',
+        'third_last_euro': 'Euro 3'
     },
     'Heavy Duty Trucks': {
         'last_euro': 'Euro VI D/E',
         'second_last_euro': 'Euro VI A/B/C',
+        'third_last_euro': 'Euro V'
     },
     'Buses': {
-            'last_euro': 'Euro VI D/E',
-            'second_last_euro': 'Euro VI A/B/C',
+        'last_euro': 'Euro VI D/E',
+        'second_last_euro': 'Euro VI A/B/C',
+        'third_last_euro': 'Euro V'
         }
 }
 CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'Heavy Duty Trucks', 'Buses', 'L-Category']
