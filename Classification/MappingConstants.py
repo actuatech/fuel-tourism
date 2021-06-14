@@ -6,8 +6,8 @@ CATEGORY_MAPPING_DICT = {
     'TRANSPORTS PASSATGER': 'Buses',
     'CICLOMOTORS': 'L-Category',
     'MOTOS': 'L-Category',
-    'VEHICLES ESPECIALS': 'L-Category',  # Quads
-    'VEHICLES AGRICOLS': None  
+    'VEHICLES ESPECIALS': 'Off Road',  # Quads
+    'VEHICLES AGRICOLS': 'Off Road'
 }
 
 FUEL_MAPPING_DICT = {       # De moment no hi han vehicles amb Gas Natural, si al futur hi ha, s'ha d'afegir
@@ -49,6 +49,6 @@ MAPPING_CATEGORY_LAST_EURO_STANDARD = {
         'third_last_euro': 'Euro V'
         }
 }
-CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'Heavy Duty Trucks', 'Buses', 'L-Category']
+CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'Heavy Duty Trucks', 'Buses', 'L-Category', 'Off Road']
 HYBRID_PHEV_TYPES = ['Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']
 NON_ELECTRIC_FUEL_TYPES = ['Petrol', 'Diesel', 'Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']

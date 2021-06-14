@@ -1,6 +1,3 @@
-# TODO: verificar el valor de 20999 km pels hybrids, de on agafa la dada?
-
-
 import numpy as np
 import pandas as pd
 from typing import List, Dict
@@ -67,11 +64,11 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
     :return: Mean activity statisitcs of the agrupation that first matches the minimum stock required to assigned to
      the given row
     """
-
-    row_euro_standard_mapping = mapping_category_last_euro_standard[row['Category']]
     assigned_fuel = row['Fuel']
     assigned_euro_standard = row['Euro Standard']
     partitions = ['Category', 'Fuel', 'Segment', 'Euro Standard']
+    if row['Category'] != 'Off Road':
+        row_euro_standard_mapping = mapping_category_last_euro_standard[row['Category']]
 
     if row['Category'] in CATEGORIES:
         if (row['Notna_Count'] < min_stock or row['Mileage'] == 0) and pd.notna(row['Euro Standard']):
@@ -175,6 +172,8 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
         else:
             if pd.notna(row['Mean_Activity']):  # Keep Category/Fuel/Segment/Euro previously calculated mean activity
                 return row['Mean_Activity'], row['Min_Activity'], row['Max_Activity'], row['Std_Activity']
+            elif row['Category'] == 'Off Road':
+                return 0, 0, 0, 0
             else:
                 raise Exception(f'!!! Unable to calculate Mean_Activity for:  \n {row} ')
     else:

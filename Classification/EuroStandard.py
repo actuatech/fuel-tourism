@@ -173,7 +173,8 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 return 'Euro 5'
         else:
             return None
-
+    elif row['Category'] == 'Off Road':
+        return None
     else:
         print('Vehicle with no Category')
         print(row)

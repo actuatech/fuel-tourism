@@ -10,7 +10,6 @@ from DataCleaning import (
     filter_by_year_greater_than,
     keep_row_if_na_in_column,
     drop_vehicles_with_no_fuel_associated,
-    drop_agricultural_vehicles,
     filter_by_year_smaller_than
                           )
 from Classification import (
@@ -74,8 +73,8 @@ vehicles_last_30_years = filter_by_year_greater_than(itv_raw, 'ANY_FABRICACIO', 
 vehicles_last_30_years = filter_by_year_smaller_than(vehicles_last_30_years, 'DATA_ALTA', MAX_DATE)
 # Keep only vehicles that are not decommissioned
 vehicles_last_30_years_active_today = keep_row_if_na_in_column(vehicles_last_30_years, 'DATA_BAIXA')
-# Drop agricultural and vehicles with missing Fuel data
-good_vehicles_df = drop_vehicles_with_no_fuel_associated(drop_agricultural_vehicles(vehicles_last_30_years_active_today))
+# Drop vehicles with missing Fuel data
+good_vehicles_df = drop_vehicles_with_no_fuel_associated(vehicles_last_30_years_active_today)
 print(f'Total number of vehicles taken into account: {good_vehicles_df.shape[0]}')
 print('-')
 
@@ -110,17 +109,25 @@ stock_and_mileage_df = categorized_vehicles_df.groupby(
 stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df.apply(
     lambda row: activity_stats_calculator_by_grouping(row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD,
                                                       MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION), axis=1)
+
 try:
     stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df['Mean_Activity'].astype(int)
 except ValueError:
     print('Check for nan values in the stock_and_mileage dataframe: Mean activity')
+try:
+    stock_and_mileage_df['Min_Activity'] = stock_and_mileage_df['Min_Activity'].astype(int)
+except ValueError:
+    print('Check for nan values in the stock_and_mileage dataframe: Min activity')
+try:
+    stock_and_mileage_df['Max_Activity'] = stock_and_mileage_df['Max_Activity'].astype(int)
+except ValueError:
+    print('Check for nan values in the stock_and_mileage dataframe: Max activity')
+try:
+    stock_and_mileage_df['Std_Activity'] = stock_and_mileage_df['Std_Activity'].astype(int)
+except ValueError:
+    print('Check for nan values in the stock_and_mileage dataframe: Standard deviation activity')
 
 # Save wanted results
-try:
-    stock_and_mileage_df.drop(['Mileage'], axis=1).to_csv(filename_output_stock_activity)
-except Exception:
-    raise Exception('Unable to save stock and activity to file')
-
 print('Loading charts')
 stock_per_category_pie_chart(categorized_vehicles_df, output_folder)
 euro_distribution_pie_charts(categorized_vehicles_df, output_folder)

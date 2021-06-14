@@ -9,6 +9,8 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
     :param row: row of a pd.DataFrame that contains itv register data
     :return: Segment type
     """
+    if row['Category'] == 'Off Road':
+        return None
     if row['Fuel'] in NON_ELECTRIC_FUEL_TYPES:
         # Segment classification of Passenger Cars Category
         if row['Category'] == 'Passenger Cars':
@@ -74,21 +76,28 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
 
         # Segment classification for Motorcycles
         elif row['Category'] == 'L-Category':
-            if 10 < row['CC_CM3'] <= 50:  # Mopeds & Motorcycles of 2 & 4 strokes cannot be differenciated with available data
-                # TODO: mirar perque només apareixen 2 unitats
+            if 40 < row['CC_CM3'] <= 50:  # Mopeds & Motorcycles of 2 & 4 strokes cannot be differenciated with available data
                 return 'Mopeds 2-stroke <50 cm³'
-            elif row['CC_CM3'] < 250:
+            elif 50 < row['CC_CM3'] < 250:
                 return 'Motorcycles 4-stroke <250 cm³'
             elif 250 <= row['CC_CM3'] <= 750:
                 return 'Motorcycles 4-stroke 250 - 750 cm³'
             elif row['CC_CM3'] > 750:
                 return 'Motorcycles 4-stroke >750 cm³'
+
+            # Some errors detected that can be solved looking into CV column
+            elif (0.4 < row['CV'] <= 0.5) and row['Fuel'] != 'Battery Electric':
+                return 'Mopeds 2-stroke <50 cm³'
+            elif 0.5 < row['CV'] < 2.5 and row['Fuel'] != 'Battery Electric':
+                return 'Motorcycles 4-stroke <250 cm³'
+            elif 2.5 < row['CV'] <= 7.5 and row['Fuel'] != 'Battery Electric':
+                return 'Motorcycles 4-stroke 250 - 750 cm³'
+
             else:
                 print('Moto amb cilindrada CC_CM3 errònea')
                 print(row)
                 print('-')
                 return None
-
         else:
             print('Vehicle with no Category')
             print(row)

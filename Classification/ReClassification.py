@@ -40,3 +40,15 @@ def reclassification_heavy_duty_trucks_to_light_commercial_vehicles(register_df:
     recategorized_rows = anti.assign(Category='Light Commercial Vehicles')
 
     return result.append(recategorized_rows)
+
+
+def reclassification_trial_bikes_to_off_road(register_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Replace Category of trial bikes from L-Category to Off Road
+    """
+    anti = register_df[(register_df['Category'] == 'L-Category') &
+                       (register_df['MODEL'].str.contains('TRIAL'))]
+    result = anti_join_all_cols(register_df, anti)
+    recategorized_rows = anti.assign(Category='Off Road')
+
+    return result.append(recategorized_rows)

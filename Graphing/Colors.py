@@ -5,5 +5,6 @@ COLOR_DISCRETE_MAP = {
     "Light Commercial Vehicles": '#FFA15A',
     "Heavy Duty Trucks": '#EF553B',
     "Buses": '#FF97FF',
-    "L-Category": '#00CC96'
+    "L-Category": '#00CC96',
+    "Off Road": '#8C564B'
 }

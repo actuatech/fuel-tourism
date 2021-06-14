@@ -22,7 +22,8 @@ def calculate_activity_outliers_thresholds(categorized_vehicles_df: pd.DataFrame
         'Light Commercial Vehicles': {'Min_Activity': 0, 'Max_Activity': 0},
         'L-Category': {'Min_Activity': 0, 'Max_Activity': 0},
         'Heavy Duty Trucks': {'Min_Activity': 0, 'Max_Activity': 0},
-        'Buses': {'Min_Activity': 0, 'Max_Activity': 0}
+        'Buses': {'Min_Activity': 0, 'Max_Activity': 0},
+        'Off Road': {'Min_Activity': 0, 'Max_Activity': 0}
     }
 
     for category in CATEGORIES:
