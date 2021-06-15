@@ -22,7 +22,7 @@ Canviar els paràmetres al fitxer ``settings.py``:
 * MIN_DAYS_BETWEEN_REVISIONS: número de dies (integer) mínims que tenen que passar entre dos revisions consecutives per tenir en compte el quilometratge entre revisions. Defecte: 300 dies
 * MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION: mínim estoc (integer) per tipologia de vehicle perquè el càlcul de les estadístiques (mitjana, desviació estàndard es tinguin en compte.  Defecte: 50 vehicles per categoria
 
-# TODO Afegir MAPPING_CATEGORY_LAST_EURO_STANDARD al fitxer configuració
+***TODO Afegir MAPPING_CATEGORY_LAST_EURO_STANDARD al fitxer configuració***
 
 
 ## Ingesta
