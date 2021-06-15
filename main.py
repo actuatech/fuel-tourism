@@ -42,6 +42,10 @@ MAX_DATE = datetime(2021, 1, 1)
 MIN_DAYS_BETWEEN_REVISIONS = 300
 MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid
 
+# To keep current stock but calculate activity before covid date
+COVID_MILEAGE_ACTIVE = True
+COVID_START_DATE = datetime(2020, 3, 1)
+
 # Output folder for results:
 output_folder = '/Users/nilcelisfont/dev/fuel-turism/ouput/'
 
@@ -81,8 +85,9 @@ print('-')
 # CATEGORIZING VEHICLES
 print('Starting Vehicle Classification')
 categorized_vehicles_df = category_fuel_segment_euro_classification_wrapper_function(good_vehicles_df)
+categorized_vehicles_df_before_covid = filter_by_year_smaller_than(categorized_vehicles_df,
+                                                                   'DATA_DARRERA_ITV', COVID_START_DATE)
 
-# STOCK CONFIGURATION AND ACTIVITY CALCULATION
 # Create columns Mileage, number of days and corresponding Activity for each vehicle
 categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], categorized_vehicles_df['Activity'] = zip(
     *categorized_vehicles_df.apply(lambda row: activity_time_and_km_between_itv_revisions(
@@ -99,31 +104,57 @@ categorized_vehicles_df.to_csv(filename_output_categorized_vehicle_data)
 
 # Create Stock Column
 categorized_vehicles_df['Stock'] = 1
+# STOCK CONFIGURATION
+stock_df = categorized_vehicles_df.groupby(
+            ['Category', 'Fuel', 'Segment', 'Euro Standard'], dropna=False, as_index=False).agg(Stock=('Stock', 'sum'))
 
-# Calculate stock and mean activity for each partition
-stock_and_mileage_df = categorized_vehicles_df.groupby(
-            ['Category', 'Fuel', 'Segment', 'Euro Standard'], dropna=False, as_index=False).agg(
-            {'Activity': 'mean', 'Stock': 'sum', 'Mileage': 'sum'}).rename({'Activity': 'Mean_Activity'}, axis=1)
+# MILEAGE
+if not COVID_MILEAGE_ACTIVE:
+    categorized_vehicles_df_before_covid = categorized_vehicles_df
 
-# Calculate mean activity for partitions with no mean activity by assigning them from different partitions
-stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df.apply(
-    lambda row: activity_stats_calculator_by_grouping(row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD,
-                                                      MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION), axis=1)
+mileage_df = categorized_vehicles_df_before_covid.groupby(
+    ['Category', 'Fuel', 'Segment', 'Euro Standard'], dropna=False, as_index=False).agg(
+    Mileage=('Mileage', 'sum'),
+    Min_Activity=('Activity', 'min'),
+    Max_Activity=('Activity', 'max'),
+    Std_Activity=('Activity', 'std'),
+    Mean_Activity=('Activity', 'mean'),
+    Notna_Count=('Activity', 'count')
+)
+
+# stock and mileage
+stock_and_mileage_df = pd.merge(stock_df, mileage_df, on=['Category', 'Fuel', 'Segment', 'Euro Standard'], how='left')
+stock_and_mileage_df['Notna_Count'].fillna(0, inplace=True)
+
+stats_df = stock_and_mileage_df.apply(
+    lambda row: activity_stats_calculator_by_grouping(
+        row, categorized_vehicles_df, MAPPING_CATEGORY_LAST_EURO_STANDARD, MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION)
+    , result_type='expand', axis='columns').rename(columns={0: 'Mean_Activity',
+                                                            1: 'Min_Activity',
+                                                            2: 'Max_Activity',
+                                                            3: 'Std_Activity'}
+                                                   )
+stock_and_mileage_df = pd.concat(
+    [stock_and_mileage_df.drop(['Mean_Activity', 'Min_Activity', 'Max_Activity', 'Std_Activity'], axis=1), stats_df],
+    axis='columns')
 
 try:
-    stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df['Mean_Activity'].astype(int)
+    stock_and_mileage_df['Mean_Activity'] = stock_and_mileage_df['Mean_Activity'].fillna(0).astype(int)
 except ValueError:
     print('Check for nan values in the stock_and_mileage dataframe: Mean activity')
+
 try:
-    stock_and_mileage_df['Min_Activity'] = stock_and_mileage_df['Min_Activity'].astype(int)
+    stock_and_mileage_df['Min_Activity'] = stock_and_mileage_df['Min_Activity'].fillna(0).astype(int)
 except ValueError:
     print('Check for nan values in the stock_and_mileage dataframe: Min activity')
+
 try:
-    stock_and_mileage_df['Max_Activity'] = stock_and_mileage_df['Max_Activity'].astype(int)
+    stock_and_mileage_df['Max_Activity'] = stock_and_mileage_df['Max_Activity'].fillna(0).astype(int)
 except ValueError:
     print('Check for nan values in the stock_and_mileage dataframe: Max activity')
+
 try:
-    stock_and_mileage_df['Std_Activity'] = stock_and_mileage_df['Std_Activity'].astype(int)
+    stock_and_mileage_df['Std_Activity'] = stock_and_mileage_df['Std_Activity'].fillna(0).astype(int)
 except ValueError:
     print('Check for nan values in the stock_and_mileage dataframe: Standard deviation activity')
 

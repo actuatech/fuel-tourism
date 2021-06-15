@@ -23,4 +23,4 @@ def drop_vehicles_with_no_fuel_associated(registre_df: pd.DataFrame) -> pd.DataF
 
 
 def filter_by_year_smaller_than(registre_df: pd.DataFrame, colname: str, date) -> pd.DataFrame:
-    return registre_df[registre_df[colname] < date]
+    return registre_df[(registre_df[colname] < date) | (registre_df[colname].isna()) ]
