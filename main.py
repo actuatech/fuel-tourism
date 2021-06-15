@@ -7,7 +7,7 @@ from datetime import datetime
 
 from Ingestion import register_ingestor_function
 from DataCleaning import (
-    filter_by_year_greater_than,
+    filter_by_year_greater_or_equal_than,
     keep_row_if_na_in_column,
     drop_vehicles_with_no_fuel_associated,
     filter_by_year_smaller_than
@@ -36,7 +36,7 @@ filename_registre_vehicles = '01FEB2021_Historic_vehicles_amb_ITVs.xlsx'
 
 # 01FEB2021_Historic_vehicles_amb_ITVs
 # Years between from which data is keeped
-MIN_YEAR = 1989
+MIN_YEAR = 1990
 MAX_DATE = datetime(2021, 1, 1)
 
 MIN_DAYS_BETWEEN_REVISIONS = 300
@@ -69,7 +69,7 @@ print('-')
 # DATA CLEANING
 print('Cleaning Data')
 # Keep only last 30 years of data
-vehicles_last_30_years = filter_by_year_greater_than(itv_raw, 'ANY_FABRICACIO', MIN_YEAR)
+vehicles_last_30_years = filter_by_year_greater_or_equal_than(itv_raw, 'ANY_FABRICACIO', MIN_YEAR)
 vehicles_last_30_years = filter_by_year_smaller_than(vehicles_last_30_years, 'DATA_ALTA', MAX_DATE)
 # Keep only vehicles that are not decommissioned
 vehicles_last_30_years_active_today = keep_row_if_na_in_column(vehicles_last_30_years, 'DATA_BAIXA')

@@ -2,8 +2,8 @@ from datetime import datetime
 import pandas as pd
 
 
-def filter_by_year_greater_than(registre_df: pd.DataFrame, colname: str, date) -> pd.DataFrame:
-    return registre_df[registre_df[colname] > date]
+def filter_by_year_greater_or_equal_than(registre_df: pd.DataFrame, colname: str, date) -> pd.DataFrame:
+    return registre_df[registre_df[colname] >= date]
 
 
 def keep_row_if_na_in_column(registre_df: pd.DataFrame, colname: str) -> pd.DataFrame:
