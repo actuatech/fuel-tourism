@@ -47,7 +47,7 @@ def reclassification_trial_bikes_to_off_road(register_df: pd.DataFrame) -> pd.Da
     Replace Category of trial bikes from L-Category to Off Road
     """
     anti = register_df[(register_df['Category'] == 'L-Category') &
-                       (register_df['MODEL'].str.contains('TRIAL'))]
+                       (register_df['MODEL'].str.lower().str.contains('trial'))]
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Off Road')
 
