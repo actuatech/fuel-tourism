@@ -1,3 +1,4 @@
 from Graphing.EuroStandardDistributionPieCharts import euro_distribution_pie_charts
 from Graphing.StockPerCategory import stock_per_category_pie_chart
 from Graphing.StockPerManufacturingYear import stock_per_manufacturing_year_and_category_bar_charts
+from Graphing.MeanActivityHorizontalBarChart import activity_horizontal_bar_chart

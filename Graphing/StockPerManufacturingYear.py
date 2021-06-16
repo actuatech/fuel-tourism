@@ -171,7 +171,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
                        }
     fig5 = create_chart_with_segmentation_and_colors_configuration(data, category_orders, colors)
     update_chart_layout(fig5)
-    add_annotation_to_chart(fig5, data, "Buses")
+    add_annotation_to_chart(fig5, data, "L-Category")
     fig5.show()
 
     # Save figures to html file
