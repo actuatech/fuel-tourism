@@ -5,4 +5,5 @@ from .Filters import (
     keep_row_if_na_in_column,
     filter_by_year_smaller_than
 )
+from .TypeConvertion import convert_to_integer_df_columns
 
