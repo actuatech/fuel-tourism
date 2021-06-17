@@ -1,3 +1,8 @@
+import logging
+
+info_logger = logging.getLogger('info_logger' + '.EuroStandard')
+
+
 def euro_standard_identification_by_year_of_manufacturing(row) -> str:
     """
     Returns the Euro Standard Legislation/technology depending of the vehicle Category, Fuel and year of manufacturing
@@ -83,10 +88,17 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 if row['ANY_FABRICACIO'] < 1995:
                     return 'Conventional'
                 elif 1995 <= row['ANY_FABRICACIO'] < 1999:
+                    if row['Segment'] == 'Mini':
+                        print(row)
+                        return 'Euro 4'
                     return 'Euro 1'
                 elif 1999 <= row['ANY_FABRICACIO'] < 2002:
+                    if row['Segment'] == 'Mini':
+                        return 'Euro 4'
                     return 'Euro 2'
                 elif 2002 <= row['ANY_FABRICACIO'] < 2007:
+                    if row['Segment'] == 'Mini':
+                        return 'Euro 4'
                     return 'Euro 3'
                 elif 2007 <= row['ANY_FABRICACIO'] < 2012:
                     return 'Euro 4'
@@ -123,9 +135,8 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
         elif row['Fuel'] == 'Diesel Hybrid':
             return None
         else:
-            print('Heavy Duty Truck with no Euro Standard')
-            print(row)
-            print('-')
+            info_logger.warning('Heavy Duty Truck with no Euro Standard:')
+            info_logger.warning(row)
 
     # Technology classification of Buses
     elif row['Category'] == 'Buses':
@@ -152,9 +163,8 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
             elif row['ANY_FABRICACIO'] >= 2020:
                 return 'Euro VI D/E'
         else:
-            print('Bus with no Euro Standard')
-            print(row)
-            print('-')
+            info_logger.warning('Bus with no Euro Standard: ')
+            info_logger.warning(row)
 
     # Technology classification of L-Category
     elif row['Category'] == 'L-Category':
@@ -176,7 +186,6 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
     elif row['Category'] == 'Off Road':
         return None
     else:
-        print('Vehicle with no Category')
-        print(row)
-        print('-')
+        info_logger.warning('Heavy Duty Truck with no Euro Standard:')
+        info_logger.warning(row)
         return None

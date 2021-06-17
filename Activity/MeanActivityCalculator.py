@@ -1,10 +1,14 @@
 import numpy as np
 import pandas as pd
 from typing import List, Dict
+import logging
 
 from .AggregationFunctions import groupby_partitions, filter_groupby_partitions
 from .ActivityChecks import check_for_activity_outliers
 from Classification.MappingConstants import CATEGORIES, HYBRID_PHEV_TYPES
+
+info_logger = logging.getLogger('info_logger' + '.MeanActivityCalculator')
+logger = logging.getLogger('logger' + '.MeanActivityCalculator')
 
 
 def activity_stats_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partitions: List, min_stock: int,
@@ -31,12 +35,12 @@ def activity_stats_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partiti
         groupby_partitions(vehicles_df, partitions), row, euro_standard, fuel_type
     ).reset_index()
 
-    if filtered_groupby.shape[0] != 1:  # The agrupation must contain just one row matching partitions of given row
-        raise Exception(
-            f"Filtered Groupby Dataframe to match segmentation {partitions}, with more or less than 1 row:"
-            f" \n {filtered_groupby} \n for vehicle: \n {row}"
-        )
-
+    if filtered_groupby.shape[0] < 1:  # The agrupation must contain just one row matching partitions of given row
+        logger.info(f"Filtered Groupby Dataframe to match segmentation {partitions}, with more or less than 1 row:"
+                     f" {filtered_groupby} \n for vehicle: {row}", exc_info=True)
+    elif filtered_groupby.shape[0] > 1:
+        logger.warning(f"Filtered Groupby Dataframe to match segmentation {partitions}, with more or less than 1 row:"
+                    f" {filtered_groupby} \n for vehicle: {row}", exc_info=True)
     # Returns Mean Activity if the agrupation meets the minimum number of vehicles to trust the calculated value
     if filtered_groupby['Notna_Count'][0] >= min_stock:
         mean_activity = filtered_groupby['Mean_Activity'][0]
@@ -89,8 +93,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
                 except:
                     mean_activity = np.nan
                 if pd.notna(mean_activity):
-                    print(f'Mean activity taken from previous Euro Standard assigned to \n {row}')
-                    return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                    info_logger.info(f'Mean activity taken from previous Euro Standard assigned to: ')
+                    info_logger.info(row)
+                    return mean_activity, min_activity, max_activity, std_activity
 
                 assigned_euro_standard = row_euro_standard_mapping['third_last_euro']
                 # Assigning third previous Euro Standard (for new vehicles with no ITV mileage info)
@@ -100,8 +105,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
                 except:
                     mean_activity = np.nan
                 if pd.notna(mean_activity):
-                    print(f'Mean activity taken from Third previous Euro Standard assigned to \n {row}')
-                    return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                    info_logger.info(f'Mean activity taken from Third previous Euro Standard assigned to :')
+                    info_logger.info(row)
+                    return mean_activity, min_activity, max_activity, std_activity
                 assigned_euro_standard = row_euro_standard_mapping['second_last_euro']
 
             # Aggregation by Category, Fuel, Segment
@@ -112,8 +118,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
-                print(f'Mean activity with aggregation by Category, Fuel and Segment assigned to: \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity with aggregation by Category, Fuel and Segment assigned to: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
             # Aggregation by Category, Fuel, Euro Standard
             partitions = ['Category', 'Fuel', 'Euro Standard']
@@ -123,8 +130,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
-                print(f'Mean activity with aggregation by Category, Fuel and Euro Standard assigned to: \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity with aggregation by Category, Fuel and Euro Standard assigned to: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
             # Just group by Fuel and Category
             partitions = ['Category', 'Fuel']
@@ -134,9 +142,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
-                print(f'Mean activity with aggregation by Category and Fuel assigned to vehicle:'
-                      f' \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity with aggregation by Category and Fuel assigned to vehicle: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
             # Just group by Segment and Category
             partitions = ['Category', 'Segment']
@@ -146,8 +154,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
-                print(f'Mean activity with aggregation by Category and Segment assigned to vehicle: \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity with aggregation by Category and Segment assigned to vehicle: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
             # If previous partitions are not enough, just group by Category
             partitions = ['Category']
@@ -157,8 +166,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
-                print(f'Mean activity just aggregating by Category, assigned to vehicle: \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity just aggregating by Category, assigned to vehicle: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
         # Electrical vehicles (No Euro Standard) with no minimal stock per segment
         elif row['Fuel'] == 'Battery Electric' and pd.isna(row['Std_Activity']):
@@ -166,8 +176,9 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
                 vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             if pd.notna(mean_activity):
-                print(f'Mean activity aggregating by Category assigned to  electrical vehicle: \n {row}')
-                return round(mean_activity, 0), round(min_activity, 0), round(max_activity, 0), round(std_activity, 0)
+                info_logger.info(f'Mean activity aggregating by Category assigned to  electrical vehicle: ')
+                info_logger.info(row)
+                return mean_activity, min_activity, max_activity, std_activity
 
         else:
             if pd.notna(row['Mean_Activity']):  # Keep Category/Fuel/Segment/Euro previously calculated mean activity
@@ -175,7 +186,7 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
             elif row['Category'] == 'Off Road':
                 return 0, 0, 0, 0
             else:
-                raise Exception(f'!!! Unable to calculate Mean_Activity for:  \n {row} ')
+                logger.error(f'!!! Unable to calculate Mean_Activity for:  \n {row} ', exc_info=True)
     else:
-        raise Exception(f'Category type not found for vehicle: \n {row} \n')
+        raise logger.error(f'Category type not found for vehicle: \n {row} ', exc_info=True)
 

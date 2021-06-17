@@ -1,5 +1,8 @@
 from typing import List
 import pandas as pd
+import logging
+
+logger = logging.getLogger('logger' + '.AggregationFunctions')
 
 
 def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFrame.groupby:
@@ -13,7 +16,6 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
     :param partitions: must be one or more of :  ['Category', 'Fuel', 'Segment', 'Euro Standard']
     :return: grouped pd.Dataframe for the given partitions
     """
-    NUM_OF_DAYS_PER_YEAR = 365
     try:
         groupby = vehicles_df.groupby(
             partitions, dropna=False, as_index=False).agg(
@@ -27,7 +29,7 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
         )
 
     except Exception:
-        raise Exception(f'Unable to groupby {partitions}, the vehicles dataframe')
+        logger.error(f'Unable to groupby {partitions}, the vehicles dataframe', exc_info=True)
 
     return groupby
 

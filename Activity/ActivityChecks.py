@@ -2,6 +2,9 @@ from datetime import timedelta
 import numpy as np
 import pandas as pd
 from typing import Dict
+import logging
+
+info_logger = logging.getLogger('info_logger' + '.ActivityChecks')
 
 
 def check_if_timedelta_greater_than_minimum_days(time_difference: timedelta, min_days: int) -> bool:
@@ -40,6 +43,8 @@ def calculate_activity_outliers_thresholds(categorized_vehicles_df: pd.DataFrame
         else:
             activity_outliers_per_category_mapping[category]['Min_Activity'] = q1 - 1.5 * iqr
 
+    info_logger.info(f'Activity outliers per Category: ')
+    info_logger.info((activity_outliers_per_category_mapping))
     return activity_outliers_per_category_mapping
 
 
@@ -47,10 +52,15 @@ def check_for_activity_outliers(row: pd.Series, activity_outliers_per_category_m
     """Assign to nan Activity outliers"""
 
     if row['Activity'] < activity_outliers_per_category_mapping[row['Category']]['Min_Activity']:
+        info_logger.info(f"Vehicle amb activitat inferior al llindar mínim: "
+                         f"{activity_outliers_per_category_mapping[row['Category']]['Min_Activity']}")
+        info_logger.info(row)
         return np.nan
     elif row['Activity'] > activity_outliers_per_category_mapping[row['Category']]['Max_Activity']:
+        info_logger.info(f"Vehicle amb activitat superior al llindar màxim "
+                         f"{activity_outliers_per_category_mapping[row['Category']]['Max_Activity']}: ")
+        info_logger.info(row)
         return np.nan
     else:
         return row['Activity']
 
-# TODO:; print to file the vehicles with bigger activity

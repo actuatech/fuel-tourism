@@ -1,4 +1,7 @@
 import pandas as pd
+import logging
+
+info_logger = logging.getLogger('info_logger' + '.ReClassification')
 
 
 def anti_join(x, y, on):
@@ -21,6 +24,8 @@ def reclassification_light_commercial_to_heavy_duty_trucks(register_df: pd.DataF
     anti = register_df[(register_df['TIPUS'] == 'CAMIONETES') &
                        (register_df['PES_BUIT'] >= 3500) &
                        (register_df['Category'] == 'Light Commercial Vehicles')]
+    info_logger.info(f'Total number of Light Commercial Vehicles converted to Heavy Duty Trucks loaded: {anti.shape[0]}')
+
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Heavy Duty Trucks')
 
@@ -36,6 +41,7 @@ def reclassification_heavy_duty_trucks_to_light_commercial_vehicles(register_df:
     anti = register_df[(register_df['TIPUS'] == 'CAMIONS') &
                        (register_df['PES_BUIT'] < 3500) &
                        (register_df['Category'] == 'Heavy Duty Trucks')]
+    info_logger.info(f'Total number of Heavy Duty Trucks converted to Light Commercial Vehicles loaded: {anti.shape[0]}')
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Light Commercial Vehicles')
 
@@ -48,6 +54,7 @@ def reclassification_trial_bikes_to_off_road(register_df: pd.DataFrame) -> pd.Da
     """
     anti = register_df[(register_df['Category'] == 'L-Category') &
                        (register_df['MODEL'].str.lower().str.contains('trial'))]
+    info_logger.info(f'Total number of Trial bikes detected: {anti.shape[0]}')
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Off Road')
 

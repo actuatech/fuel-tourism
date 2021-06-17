@@ -1,4 +1,4 @@
-# fuel-turism
+# fuel-tourism
 Aquest modul permet tractar l’Excel del Registre de vehicles i les seves dades respecte a les revisions ITV per tal de:
 * Classificar els vehicles segons la seva categoria, utilitzant les classificacions de COPERT (és el estàndard de la Unió Europea pel càlcul d’emissions dels vehicles).
 * Obtenció dels patrons d’activitat (km/any) segons la tipologia de vehicle (permetrà el càlcul del consum dels vehicles amb COPERT)
@@ -17,10 +17,41 @@ Copiar l’Excel del registre de vehicles a la carpeta ``_data`` del repositori.
 
 Canviar els paràmetres al fitxer ``settings.py``:
 
-* MIN_YEAR: Any (integer) o data (datetime.date) de fabricació dels vehicles a partir del qual es tenen en compte pels càlculs. Defecte: 1990
-* MAX_DATE: Any (integer) o data (datetime.date) d’alta dels vehicles fins quan es tenen en compte pels càlculs.
-* MIN_DAYS_BETWEEN_REVISIONS: número de dies (integer) mínims que tenen que passar entre dos revisions consecutives per tenir en compte el quilometratge entre revisions. Defecte: 300 dies
-* MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION: mínim estoc (integer) per tipologia de vehicle perquè el càlcul de les estadístiques (mitjana, desviació estàndard es tinguin en compte.  Defecte: 50 vehicles per categoria
+* MIN_YEAR: Any (integer) o data (datetime.date) de fabricació dels vehicles a partir del qual es tenen en compte pels càlculs. Defecte: *1990*
+* MAX_DATE: Any (integer) o data (datetime.date) d’alta dels vehicles fins quan es tenen en compte pels càlculs. *2020*
+* MIN_DAYS_BETWEEN_REVISIONS: número de dies (integer) mínims que tenen que passar entre dos revisions consecutives per tenir en compte el quilometratge entre revisions. Defecte: *300 dies*
+* MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION: mínim estoc (integer) per tipologia de vehicle perquè el càlcul de les estadístiques (mitjana, desviació estàndard es tinguin en compte.  Defecte: *50 vehicles per categoria*
+* COVID_MILEAGE_ACTIVE: bool. Posar `True` si es vol calcular l'activitat només per revisions ITV per sota de la data COVID_START_DATE. Del contrari, `False`
+* COVID_START_DATE: Data a partir de la qual no es tenen en compte els quilometratges de les revisions ITV Per defecte: *datetime(2019, 3, 1)*
+* MAPPING_CATEGORY_LAST_EURO_STANDARD: Diccionari representat les últimes normatives Euro per cada una de les categories.
+```
+MAPPING_CATEGORY_LAST_EURO_STANDARD = {
+    'Passenger Cars': {
+        'last_euro': 'Euro 6 d-temp',
+        'second_last_euro': 'Euro 6 a/b/c',
+        'third_last_euro': 'Euro 5'
+                       },
+    'Light Commercial Vehicles': {
+            'last_euro': 'Euro 6 d-temp',
+            'second_last_euro': 'Euro 6 a/b/c',
+            'third_last_euro': 'Euro 5'
+                           },
+    'L-Category': {
+        'last_euro': 'Euro 5',
+        'second_last_euro': 'Euro 4',
+        'third_last_euro': 'Euro 3'
+    },
+    'Heavy Duty Trucks': {
+        'last_euro': 'Euro VI D/E',
+        'second_last_euro': 'Euro VI A/B/C',
+        'third_last_euro': 'Euro V'
+    },
+    'Buses': {
+        'last_euro': 'Euro VI D/E',
+        'second_last_euro': 'Euro VI A/B/C',
+        'third_last_euro': 'Euro V'
+        }
+```     
 
 ***TODO Afegir MAPPING_CATEGORY_LAST_EURO_STANDARD al fitxer configuració***
 

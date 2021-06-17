@@ -1,5 +1,9 @@
 import pandas as pd
+import logging
+
 from .MappingConstants import NON_ELECTRIC_FUEL_TYPES
+
+info_logger = logging.getLogger('info_logger' + '.CopertSegmentIdentification')
 
 
 def segment_identification_for_each_category(row: pd.Series) -> str:
@@ -23,9 +27,8 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
             if 2000 < row['CC_CM3'] <= 8500:
                 return 'Large-SUV-Executive'
             else:
-                print('Passenger Car amb cilindrada CC_CM3 errònea')
-                print(row)
-                print('-')
+                info_logger.info('Passenger Car amb cilindrada CC_CM3 errònea')
+                info_logger.info(row)
                 return None
 
         # Segment classification of Light Commercial Vehicles
@@ -69,9 +72,8 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
             elif row['PES_BUIT'] > 18000:
                 return 'Urban Buses Articulated >18 t'
             else:
-                print('Bus amb PES_BUIT erròni:')
-                print(row)
-                print('-')
+                info_logger.info('Bus amb PES_BUIT erròni:')
+                info_logger.info(row)
                 return None
 
         # Segment classification for Motorcycles
@@ -94,13 +96,11 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
                 return 'Motorcycles 4-stroke 250 - 750 cm³'
 
             else:
-                print('Moto amb cilindrada CC_CM3 errònea')
-                print(row)
-                print('-')
+                info_logger.info('Moto amb cilindrada CC_CM3 errònea')
+                info_logger.info(row)
                 return None
         else:
-            print('Vehicle with no Category')
-            print(row)
-            print('-')
+            info_logger.warning('Vehicle with no Category:')
+            info_logger.warning(row)
     else:
         return None

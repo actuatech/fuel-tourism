@@ -1,5 +1,5 @@
 import pandas as pd
-# TODO: afegir categoria off road / vehicles especials / trial / agricoles / quads
+import logging
 
 from .CopertSegmentIdentification import segment_identification_for_each_category
 from .EuroStandard import euro_standard_identification_by_year_of_manufacturing
@@ -12,9 +12,12 @@ from .MappingFunctions import category_mapper_itv_copert, fuel_mapper_itv_copert
 from .SegmentRedistribution import fill_nan_with_frequency
 from .MappingConstants import NON_ELECTRIC_FUEL_TYPES
 
+logger = logging.getLogger('logger' + '.ClassificationWrapper')
+
 
 def category_fuel_segment_euro_classification_wrapper_function(register_df: pd.DataFrame) -> pd.DataFrame:
     """Return the input itv register df with the columns Category, Fuel, Segment, Euro Standard for each vehicle(row)"""
+    logger.info('Starting Vehicle Classification')
     df = category_mapper_itv_copert(register_df)
     df = fuel_mapper_itv_copert(df)
     df = reclassification_light_commercial_to_heavy_duty_trucks(df)

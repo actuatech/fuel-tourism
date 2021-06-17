@@ -6,4 +6,5 @@ from .Filters import (
     filter_by_year_smaller_than
 )
 from .TypeConvertion import convert_to_integer_df_columns
+from .Info import print_info
 
