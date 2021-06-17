@@ -1,5 +1,8 @@
 from datetime import datetime
 import numpy as np
+import logging
+
+logger = logging.getLogger('logger' + '.DateParser')
 
 
 def date_parser(date: int) -> datetime:
@@ -9,7 +12,7 @@ def date_parser(date: int) -> datetime:
     :return: datetime of the date or nan
     """
 
-    date = str(date)
+    date = str(date).rstrip('.00')
     try:
         result = datetime.strptime(date, '%Y%m%d')
         return result
@@ -17,9 +20,10 @@ def date_parser(date: int) -> datetime:
         if date != 'nan':
             if date != '':
                 try:
+                    print(date)
                     date = date[:4]
                     result = datetime.strptime(date, '%Y')
                     return result
                 except ValueError:
-                    print(f'Unable to parse date {date}, with function date_parser, error: {e}')
+                    logger.error(f'Unable to parse date {date}, with function date_parser', exc_info=True)
                     return date
