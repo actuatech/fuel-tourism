@@ -20,7 +20,6 @@ def date_parser(date: int) -> datetime:
         if date != 'nan':
             if date != '':
                 try:
-                    print(date)
                     date = date[:4]
                     result = datetime.strptime(date, '%Y')
                     return result
