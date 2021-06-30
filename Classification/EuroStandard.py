@@ -14,13 +14,31 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
 
     if row['Category'] == 'Passenger Cars':
         if row['Fuel'] != 'Battery Electric':  # No Euro Category for electric cars
+            # Acording to Copert there is no Petrol Mini less than EURO 4
+            if row['Fuel'] == 'Petrol' and row['Segment'] == 'Mini' and row['ANY_FABRICACIO'] < 2011:
+                return 'Euro 4'
+            # Acording to Copert there is no Petrol Hybrid less than EURO 4
+            if row['Fuel'] == 'Petrol Hybrid' and row['ANY_FABRICACIO'] < 2011:
+                return 'Euro 4'
+            # Acording to Copert there is no Petrol/Diesel PHEV less than EURO 6 a/b/c
+            if (row['Fuel'] == 'Petrol PHEV' or row['Fuel'] == 'Diesel PHEV') and row['ANY_FABRICACIO'] < 2020:
+                return 'Euro 6 a/b/c'
+
             if row['ANY_FABRICACIO'] < 1978:
+                if row['Fuel'] == 'Diesel':
+                    return 'Conventional'
                 return 'ECE 15/00-01'
             elif 1978 < row['ANY_FABRICACIO'] < 1981:
+                if row['Fuel'] == 'Diesel':
+                    return 'Conventional'
                 return 'ECE 15/02'
             elif 1981 < row['ANY_FABRICACIO'] < 1985:
+                if row['Fuel'] == 'Diesel':
+                    return 'Conventional'
                 return 'ECE 15/03'
             elif 1985 < row['ANY_FABRICACIO'] < 1993:
+                if row['Fuel'] == 'Diesel':
+                    return 'Conventional'
                 return 'ECE 15/04'
             elif 1993 <= row['ANY_FABRICACIO'] < 1997:
                 return 'Euro 1'
@@ -88,17 +106,10 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 if row['ANY_FABRICACIO'] < 1995:
                     return 'Conventional'
                 elif 1995 <= row['ANY_FABRICACIO'] < 1999:
-                    if row['Segment'] == 'Mini':
-                        print(row)
-                        return 'Euro 4'
                     return 'Euro 1'
                 elif 1999 <= row['ANY_FABRICACIO'] < 2002:
-                    if row['Segment'] == 'Mini':
-                        return 'Euro 4'
                     return 'Euro 2'
                 elif 2002 <= row['ANY_FABRICACIO'] < 2007:
-                    if row['Segment'] == 'Mini':
-                        return 'Euro 4'
                     return 'Euro 3'
                 elif 2007 <= row['ANY_FABRICACIO'] < 2012:
                     return 'Euro 4'

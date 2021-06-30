@@ -19,6 +19,9 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
         # Segment classification of Passenger Cars Category
         if row['Category'] == 'Passenger Cars':
             if 560 < row['CC_CM3'] < 800:
+                # Acording to Copert there is no Petrol PHEV or Diesel Mini, assigned to small
+                if row['Fuel'] != 'Petrol':
+                    return 'Small'
                 return 'Mini'
             if 800 <= row['CC_CM3'] < 1400:
                 return 'Small'
@@ -65,6 +68,8 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
 
         # Segment classification for Buses
         elif row['Category'] == 'Buses':  # Articulated buses not taken into account, cannot be differenciated with data
+            if row['Fuel'] == 'Diesel Hybrid':  # Just one segment for Diesel Hybrid according to Copert
+                return 'Urban Buses Diesel Hybrid'
             if 1000 < row['PES_BUIT'] <= 15000:
                 return 'Urban Buses Midi <=15 t'
             elif 15000 < row['PES_BUIT'] <= 18000:
