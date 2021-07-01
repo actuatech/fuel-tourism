@@ -44,7 +44,7 @@ def calculate_activity_outliers_thresholds(categorized_vehicles_df: pd.DataFrame
         q1 = np.quantile(data, 0.25)
         q3 = np.quantile(data, 0.75)
         iqr = q3 - q1
-        activity_outliers_per_category_mapping[category]['Max_Activity'] = q3 + 1.5 * iqr
+        activity_outliers_per_category_mapping[category]['Max_Activity'] = q3 + 5 * iqr
         # Assign minimum to 250 if value of minimum activity to be outlier is less than 250
         if (q1 - 1.5 * iqr) < 250:
             activity_outliers_per_category_mapping[category]['Min_Activity'] = 250
@@ -57,7 +57,7 @@ def calculate_activity_outliers_thresholds(categorized_vehicles_df: pd.DataFrame
         q1 = np.quantile(data, 0.25)
         q3 = np.quantile(data, 0.75)
         iqr = q3 - q1
-        lifetime_activity_outliers_per_category_mapping[category]['Max_Activity'] = q3 + 1.7 * iqr # 1.7 is equivalent to 3σ
+        lifetime_activity_outliers_per_category_mapping[category]['Max_Activity'] = q3 + 5 * iqr # 1.7 is equivalent to 3σ
         # Assign minimum to 250 if value of minimum activity to be outlier is less than 250
         if (q1 - 1.5 * iqr) < 250:
             lifetime_activity_outliers_per_category_mapping[category]['Min_Activity'] = 250
@@ -84,9 +84,6 @@ def check_for_activity_outliers(row: pd.Series, activity_outliers_per_category_m
         info_logger.info(row)
         activity = np.nan
     elif row['Activity'] > activity_outliers_per_category_mapping[row['Category']]['Max_Activity']:
-        info_logger.info(f"Vehicle amb activitat superior al llindar màxim "
-                         f"{activity_outliers_per_category_mapping[row['Category']]['Max_Activity']}: ")
-        info_logger.info(row)
         activity = np.nan
 
     # Check Lifetime Activity outliers
@@ -96,9 +93,6 @@ def check_for_activity_outliers(row: pd.Series, activity_outliers_per_category_m
         info_logger.info(row)
         lifetime_activity = np.nan
     elif row['Lifetime Activity'] > lifetime_activity_outliers_per_category_mapping[row['Category']]['Max_Activity']:
-        info_logger.info(f"Vehicle amb Lifetime cumulative activity superior al llindar màxim "
-                         f"{lifetime_activity_outliers_per_category_mapping[row['Category']]['Max_Activity']}: ")
-        info_logger.info(row)
         lifetime_activity = np.nan
 
     return activity, lifetime_activity

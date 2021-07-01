@@ -51,9 +51,6 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                 if mileage > 0:
                     activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
                     return timedelta_revisions.days, mileage, abs(activity), lifetime_activity
-                else:
-                    info_logger.info('Error de kilometratge: ')
-                    info_logger.info(row)
 
             else:
                 if pd.notna(row['DATA_DARRERA_ITV3']) and row['DATA_DARRERA_ITV3'] < max_date:
@@ -64,9 +61,6 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                         if mileage > 0:
                             activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
                             return timedelta_revisions.days, mileage, abs(activity), lifetime_activity
-                        else:
-                            info_logger.info('Error de kilometratge: ')
-                            info_logger.info(row)
                     else:
                         if pd.notna(row['DATA_DARRERA_ITV4']) and row['DATA_DARRERA_ITV4'] < max_date:
                             timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV3'], row['DATA_DARRERA_ITV4'])
@@ -77,9 +71,6 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                                 if mileage > 0:
                                     activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
                                     return timedelta_revisions.days, mileage, abs(activity), lifetime_activity
-                                else:
-                                    info_logger.info('Error de kilometratge: ')
-                                    info_logger.info(row)
                             else:
                                 if pd.notna(row['DATA_DARRERA_ITV5']) and row['DATA_DARRERA_ITV5'] < max_date:
                                     timedelta_revisions = time_between_dates(row['DATA_DARRERA_ITV4'],
@@ -91,9 +82,6 @@ def activity_time_and_km_between_itv_revisions(row, max_date: datetime, min_days
                                         if mileage > 0:
                                             activity = (mileage / timedelta_revisions.days) * DAYS_IN_A_YEAR
                                             return timedelta_revisions.days, mileage, abs(activity), lifetime_activity
-                                        else:
-                                            info_logger.info('Error de kilometratge: ')
-                                            info_logger.info(row)
                                     else:
                                         return np.nan, np.nan, np.nan, lifetime_activity
 

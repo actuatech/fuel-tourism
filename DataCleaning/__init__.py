@@ -7,5 +7,5 @@ from .Filters import (
     filter_by_partitions
 )
 from .TypeConvertion import convert_to_integer_df_columns
-from .Info import print_info
+from .Info import print_info, save_to_csv_vehicles_with_erroneous_data
 

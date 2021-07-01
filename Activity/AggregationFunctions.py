@@ -57,20 +57,3 @@ def filter_groupby_partitions(groupby: pd.DataFrame.groupby, row: pd.Series, eur
         filtered_groupby = filtered_groupby[(filtered_groupby['Fuel'] == fuel_type)]
 
     return filtered_groupby
-
-
-def filter_by_partitions(df: pd.DataFrame, category=None, fuel=None, segment=None, euro=None):
-    """
-    Filters the groupby dataframe to match the values of the given partitions
-    """
-    filtered_groupby = df.copy()
-    if euro:
-        filtered_groupby = filtered_groupby[(filtered_groupby['Euro Standard'] == euro)]
-    if category:
-        filtered_groupby = filtered_groupby[(filtered_groupby['Category'] == category)]
-    if segment:
-        filtered_groupby = filtered_groupby[(filtered_groupby['Segment'] == segment)]
-    if fuel:
-        filtered_groupby = filtered_groupby[(filtered_groupby['Fuel'] == fuel)]
-
-    return filtered_groupby

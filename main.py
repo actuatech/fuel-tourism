@@ -15,7 +15,8 @@ from DataCleaning import (
     drop_vehicles_with_no_fuel_associated,
     filter_by_year_smaller_than,
     convert_to_integer_df_columns,
-    print_info
+    print_info,
+    save_to_csv_vehicles_with_erroneous_data
                           )
 from Classification import (
     category_fuel_segment_euro_classification_wrapper_function,
@@ -107,6 +108,11 @@ categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], cate
 activity_outliers_per_category_mapping, lifetime_activity_outliers_per_category_mapping =\
     calculate_activity_outliers_thresholds(categorized_vehicles_df)
 
+# Save erroneous data to csv files
+save_to_csv_vehicles_with_erroneous_data(categorized_vehicles_df, output_folder,
+                                         activity_outliers_per_category_mapping,
+                                         lifetime_activity_outliers_per_category_mapping)
+
 categorized_vehicles_df['Activity'], categorized_vehicles_df['Lifetime Activity'] = zip(*categorized_vehicles_df.apply(
     lambda row: check_for_activity_outliers(row, activity_outliers_per_category_mapping,
                                             lifetime_activity_outliers_per_category_mapping), axis=1))
@@ -115,6 +121,7 @@ categorized_vehicles_df['Activity'], categorized_vehicles_df['Lifetime Activity'
 print_info(categorized_vehicles_df) # print info
 logger.info('Saving cleaned, categorized data and vehicle activity to csv')
 categorized_vehicles_df.to_csv(filename_output_categorized_vehicle_data)
+
 
 # Create Stock Column
 categorized_vehicles_df['Stock'] = 1
