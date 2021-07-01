@@ -25,6 +25,7 @@ def groupby_partitions(vehicles_df: pd.DataFrame, partitions: List) -> pd.DataFr
             Max_Activity=('Activity', 'max'),
             Std_Activity=('Activity', 'std'),
             Mean_Activity=('Activity', 'mean'),
+            Mean_Lifetime_Activity=('Lifetime Activity', 'mean'),
             Notna_Count=('Activity', 'count')
         )
 

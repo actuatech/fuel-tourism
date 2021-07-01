@@ -47,10 +47,11 @@ def activity_stats_calculator(vehicles_df: pd.DataFrame, row: pd.Series, partiti
         min_activity = filtered_groupby['Min_Activity'][0]
         max_activity = filtered_groupby['Max_Activity'][0]
         std_activity = filtered_groupby['Std_Activity'][0]
+        mean_lifetime_activity = filtered_groupby['Mean_Lifetime_Activity'][0]
 
-        return mean_activity, min_activity, max_activity, std_activity
+        return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
-    return np.nan, np.nan, np.nan, np.nan
+    return np.nan, np.nan, np.nan, np.nan, np.nan
 
 
 def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFrame,
@@ -88,103 +89,104 @@ def activity_stats_calculator_by_grouping(row: pd.Series, vehicles_df: pd.DataFr
 
                 assigned_euro_standard = row_euro_standard_mapping['second_last_euro']
                 try:
-                    mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                    mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                         vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
                 except:
                     mean_activity = np.nan
                 if pd.notna(mean_activity):
                     info_logger.info(f'Mean activity taken from previous Euro Standard assigned to: ')
                     info_logger.info(row)
-                    return mean_activity, min_activity, max_activity, std_activity
+                    return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
                 assigned_euro_standard = row_euro_standard_mapping['third_last_euro']
                 # Assigning third previous Euro Standard (for new vehicles with no ITV mileage info)
                 try:
-                    mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                    mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                         vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
                 except:
                     mean_activity = np.nan
                 if pd.notna(mean_activity):
                     info_logger.info(f'Mean activity taken from Third previous Euro Standard assigned to :')
                     info_logger.info(row)
-                    return mean_activity, min_activity, max_activity, std_activity
+                    return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
                 assigned_euro_standard = row_euro_standard_mapping['second_last_euro']
 
             # Aggregation by Category, Fuel, Segment
             partitions = ['Category', 'Fuel', 'Segment']
             try:
-                mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                     vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity with aggregation by Category, Fuel and Segment assigned to: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
             # Aggregation by Category, Fuel, Euro Standard
             partitions = ['Category', 'Fuel', 'Euro Standard']
             try:
-                mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                     vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity with aggregation by Category, Fuel and Euro Standard assigned to: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
             # Just group by Fuel and Category
             partitions = ['Category', 'Fuel']
             try:
-                mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                     vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity with aggregation by Category and Fuel assigned to vehicle: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
             # Just group by Segment and Category
             partitions = ['Category', 'Segment']
             try:
-                mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                     vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity with aggregation by Category and Segment assigned to vehicle: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
             # If previous partitions are not enough, just group by Category
             partitions = ['Category']
             try:
-                mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+                mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                     vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             except:
                 mean_activity = np.nan
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity just aggregating by Category, assigned to vehicle: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
         # Electrical vehicles (No Euro Standard) with no minimal stock per segment
         elif row['Fuel'] == 'Battery Electric' and pd.isna(row['Std_Activity']):
             partitions = ['Category']
-            mean_activity, min_activity, max_activity, std_activity = activity_stats_calculator(
+            mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity = activity_stats_calculator(
                 vehicles_df, row, partitions, min_stock, assigned_euro_standard, assigned_fuel)
             if pd.notna(mean_activity):
                 info_logger.info(f'Mean activity aggregating by Category assigned to  electrical vehicle: ')
                 info_logger.info(row)
-                return mean_activity, min_activity, max_activity, std_activity
+                return mean_activity, min_activity, max_activity, std_activity, mean_lifetime_activity
 
         else:
             if pd.notna(row['Mean_Activity']):  # Keep Category/Fuel/Segment/Euro previously calculated mean activity
-                return row['Mean_Activity'], row['Min_Activity'], row['Max_Activity'], row['Std_Activity']
+                return row['Mean_Activity'], row['Min_Activity'], row['Max_Activity'], row['Std_Activity'],\
+                       row['Mean_Lifetime_Activity']
             elif row['Category'] == 'Off Road':
-                return 0, 0, 0, 0
+                return 0, 0, 0, 0, 0
             else:
                 logger.error(f'!!! Unable to calculate Mean_Activity for:  \n {row} ', exc_info=True)
     else:

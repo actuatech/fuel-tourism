@@ -55,6 +55,11 @@ def activity_horizontal_bar_chart(stock_and_mileage_df: pd.DataFrame.groupby, ou
             color='rgb(800, 800, 800)',
             opacity=0)
                                          ))
+    horizontal_plot.add_trace(go.Scatter(y=data['segmentation'], x=data['Mean_Lifetime_Activity'], mode='markers',
+                                         name="Lifetime cumulative activity mitja", marker=dict(
+            color='rgb(800, 800, 800)',
+            opacity=0)
+                                         ))
 
     # For each category add the mean activity bar chart (to diferenciate by same colors as Stock distribution Pie Chart)
     for category in CATEGORIES:
@@ -74,9 +79,8 @@ def activity_horizontal_bar_chart(stock_and_mileage_df: pd.DataFrame.groupby, ou
         xaxis_title='Activitat mitja (km/any)',
         yaxis_title='Tipologia de vehicle',
         hovermode="y unified",
-        hoverlabel=dict(
-            namelength=100
-        )
+        hoverlabel=dict(namelength=100),
+        xaxis_range=[0, stock_and_mileage_df['Max_Activity'].max()*1.05]
     )
     horizontal_plot.update_xaxes(showgrid=True, zeroline=True)
     horizontal_plot.show()

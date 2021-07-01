@@ -98,15 +98,18 @@ info_logger.info(f'Total number of vehicles taken into account: {good_vehicles_d
 categorized_vehicles_df = category_fuel_segment_euro_classification_wrapper_function(good_vehicles_df)
 
 # Create columns Mileage, number of days and corresponding Activity for each vehicle
-categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], categorized_vehicles_df['Activity'] = zip(
-    *categorized_vehicles_df.apply(lambda row: activity_time_and_km_between_itv_revisions(
-        row, MAX_DATE, MIN_DAYS_BETWEEN_REVISIONS), axis=1))
+categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], categorized_vehicles_df['Activity'], \
+    categorized_vehicles_df['Lifetime Activity'] = zip(*categorized_vehicles_df.apply(
+        lambda row: activity_time_and_km_between_itv_revisions(row, MAX_DATE), axis=1))
+
 
 # Assign to nan Activity outliers
-activity_outliers_per_category_mapping = calculate_activity_outliers_thresholds(categorized_vehicles_df)
+activity_outliers_per_category_mapping, lifetime_activity_outliers_per_category_mapping =\
+    calculate_activity_outliers_thresholds(categorized_vehicles_df)
 
-categorized_vehicles_df['Activity'] = categorized_vehicles_df.apply(
-    lambda row: check_for_activity_outliers(row, activity_outliers_per_category_mapping), axis=1)
+categorized_vehicles_df['Activity'], categorized_vehicles_df['Lifetime Activity'] = zip(*categorized_vehicles_df.apply(
+    lambda row: check_for_activity_outliers(row, activity_outliers_per_category_mapping,
+                                            lifetime_activity_outliers_per_category_mapping), axis=1))
 
 # Save cleaned, categorized data and vehicle activity to csv
 print_info(categorized_vehicles_df) # print info
@@ -135,6 +138,7 @@ mileage_df = categorized_vehicles_df_before_covid.groupby(
     Max_Activity=('Activity', 'max'),
     Std_Activity=('Activity', 'std'),
     Mean_Activity=('Activity', 'mean'),
+    Mean_Lifetime_Activity=('Lifetime Activity', 'mean'),
     Notna_Count=('Activity', 'count')
 )
 
@@ -149,11 +153,14 @@ stats_df = stock_and_mileage_df.apply(
     , result_type='expand', axis='columns').rename(columns={0: 'Mean_Activity',
                                                             1: 'Min_Activity',
                                                             2: 'Max_Activity',
-                                                            3: 'Std_Activity'}
+                                                            3: 'Std_Activity',
+                                                            4: 'Mean_Lifetime_Activity',
+                                                            }
                                                   )
 # Join stock with updated activity statistics
 stock_and_mileage_df = pd.concat(
-    [stock_and_mileage_df.drop(['Mean_Activity', 'Min_Activity', 'Max_Activity', 'Std_Activity'], axis=1), stats_df],
+    [stock_and_mileage_df.drop(['Mean_Activity', 'Min_Activity', 'Max_Activity', 'Std_Activity',
+                                'Mean_Lifetime_Activity'], axis=1), stats_df],
     axis='columns')
 
 # Convert activity statistics columns to integer and check for nan values
