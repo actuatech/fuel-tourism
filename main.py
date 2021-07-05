@@ -175,7 +175,7 @@ convert_to_integer_df_columns(stock_and_mileage_df)
 
 logger.info('Saving stock and activity to csv')
 stock_and_mileage_df.drop(['Notna_Count'], axis=1).to_csv(filename_output_stock_activity)
-
+logger.info(f'Number of categories: {stock_and_mileage_df.shape[0]}')
 # Save wanted results
 logger.info('Loading charts')
 stock_per_category_pie_chart(categorized_vehicles_df, output_folder)

@@ -38,7 +38,8 @@ def category_fuel_segment_euro_classification_wrapper_function(register_df: pd.D
     df.loc[(df['Category'] == 'Passenger Cars') &
            (df['Segment'] == 'Mini') &
            ((df['Euro Standard'] == 'Euro 3') | (df['Euro Standard'] == 'Euro 1') |
-            (df['Euro Standard'] == 'Conventional') | (df['Euro Standard'] == 'Conventional')), 'Segment'] = 'Small'
+            (df['Euro Standard'] == 'Conventional') | (df['Euro Standard'] == 'ECE 15/04') |
+            (df['Euro Standard'] == 'ECE 15/02') | (df['Euro Standard'] == 'ECE 15/03')), 'Segment'] = 'Small'
     # There is no Small, Medium or small segments in L-Category nor Light Commercial Vehicles
     df.loc[(df['Category'] == 'L-Category') &
            ((df['Segment'] == 'Small') | (df['Segment'] == 'Medium') | (df['Segment'] == 'Large-SUV-Executive')),
