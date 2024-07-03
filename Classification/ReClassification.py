@@ -29,7 +29,7 @@ def reclassification_light_commercial_to_heavy_duty_trucks(register_df: pd.DataF
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Heavy Duty Trucks')
 
-    return result.append(recategorized_rows)
+    return result._append(recategorized_rows)
 
 
 def reclassification_heavy_duty_trucks_to_light_commercial_vehicles(register_df: pd.DataFrame) -> pd.DataFrame:
@@ -45,7 +45,7 @@ def reclassification_heavy_duty_trucks_to_light_commercial_vehicles(register_df:
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Light Commercial Vehicles')
 
-    return result.append(recategorized_rows)
+    return result._append(recategorized_rows)
 
 
 def reclassification_trial_bikes_to_off_road(register_df: pd.DataFrame) -> pd.DataFrame:
@@ -58,4 +58,4 @@ def reclassification_trial_bikes_to_off_road(register_df: pd.DataFrame) -> pd.Da
     result = anti_join_all_cols(register_df, anti)
     recategorized_rows = anti.assign(Category='Off Road')
 
-    return result.append(recategorized_rows)
+    return result._append(recategorized_rows)

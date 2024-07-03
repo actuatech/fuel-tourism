@@ -40,7 +40,7 @@ def save_to_csv_vehicles_with_erroneous_data(register_df: pd.DataFrame, output_f
         elif i == (len(CATEGORIES) - 1):
             df.to_csv((output_folder + 'Vehicles_potencialment_amb_kilometratge_erroni.csv'))
         else:
-            df = df.append(dfc)
+            df = df._append(dfc)
 
     df4 = register_df[(register_df['KM_DARRERA_ITV'] < register_df['KM_DARRERA_ITV2']) |
                       (register_df['KM_DARRERA_ITV2'] < register_df['KM_DARRERA_ITV3']) |

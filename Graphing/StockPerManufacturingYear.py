@@ -6,7 +6,7 @@ from Classification import HYBRID_PHEV_TYPES
 
 
 def figures_to_html(figs, filename="dashboard.html"):
-    dashboard = open(filename, 'w')
+    dashboard = open(filename, 'w', encoding='utf-8')
     dashboard.write("<html><head></head><body>" + "\n")
     for fig in figs:
         inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
@@ -44,7 +44,7 @@ def update_chart_layout(figure, title: str = None):
 def add_annotation_to_chart(figure, data: pd.DataFrame, category: str):
     figure.add_annotation(
         x=data['ANY_FABRICACIO'].min() + (data['ANY_FABRICACIO'].max() - data['ANY_FABRICACIO'].min()) / 2,
-        y=data.groupby(['ANY_FABRICACIO']).sum()['Stock'].max() * 1.15,
+        y=data.groupby(['ANY_FABRICACIO']).sum(numeric_only=True)['Stock'].max() * 1.15,
         xanchor='center', yanchor='top',
         font={'size': 16}, text=category, showarrow=False)
 
@@ -68,7 +68,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
     """
     # Passenger Cars chart:
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'Passenger Cars'].groupby(
-        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()
+        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum(numeric_only=True).reset_index()
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = ['rgb(0,68,27)', 'rgb(35,139,69)', 'rgb(199,233,192)',
@@ -89,7 +89,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
 
     # Light Commercial Vehicles Chart
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'Light Commercial Vehicles'].groupby(
-        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()
+        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum(numeric_only=True).reset_index()
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = ['rgb(0,68,27)',
@@ -107,7 +107,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
 
     # Heavy Duty Trucks
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'Heavy Duty Trucks'].groupby(
-        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()
+        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum(numeric_only=True).reset_index()
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = [
@@ -131,7 +131,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
 
     # Buses
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'Buses'].groupby(
-        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()
+        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum(numeric_only=True).reset_index()
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = [
@@ -150,7 +150,7 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
 
     # L-Category
     data = categorized_vehicles_df[categorized_vehicles_df.Category == 'L-Category'].groupby(
-        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum().reset_index()
+        ['Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False).sum(numeric_only=True).reset_index()
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = ['rgb(0,68,27)',  # electric
