@@ -34,48 +34,32 @@ from Graphing import(
     stock_per_manufacturing_year_and_category_bar_charts,
     activity_horizontal_bar_chart
 )
+from settings import (
+    path_registre_vehicles,
+    MIN_YEAR,
+    MAX_DATE,
+    MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION,
+    COVID_MILEAGE_ACTIVE,
+    COVID_START_DATE,
+    OUTPUT_FOLDER,
+    filename_output_categorized_vehicle_data,
+    filename_output_stock_activity
+)
 
 # Working directory
 dirname = os.path.dirname(__file__)
 # Define the current working directory
 cwd = Path.cwd()
 
-
 # Create and initialize loggers
-setup_logger('logger', (cwd / 'output/debug.log'))
-setup_logger('info_logger', (cwd / 'output/info.log'), stream=False)
+os.makedirs(cwd / OUTPUT_FOLDER, exist_ok=True)
+setup_logger('logger', (cwd / OUTPUT_FOLDER / 'debug.log'))
+setup_logger('info_logger', (cwd / OUTPUT_FOLDER / 'info.log'), stream=False)
 
 logger = logging.getLogger('logger')
 info_logger = logging.getLogger('info_logger')
 
 logger.info("Started")
-
-# ----------
-# PARAMETERS
-# ----------
-# ITV original data filename (Parameter)
-filename_registre_vehicles = '01FEB2021_Historic_vehicles_amb_ITVs.xlsx'
-path_registre_vehicles = cwd / '_data' / filename_registre_vehicles
-
-# 01FEB2021_Historic_vehicles_amb_ITVs
-# Years between from which data is keeped
-MIN_YEAR = 1990
-MAX_DATE = datetime(2021, 1, 1)
-
-MIN_DAYS_BETWEEN_REVISIONS = 150
-MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid
-
-# To keep current stock but calculate activity before covid date
-COVID_MILEAGE_ACTIVE = True
-COVID_START_DATE = datetime(2019, 3, 1)
-
-# Output folder for results:
-output_folder = '/Users/nilcelisfont/dev/fuel-turism/output/'
-
-# Output filename of cleaned and categorized data:
-filename_output_categorized_vehicle_data = output_folder + f'Registre_vehicles_{datetime.now().date()}.csv'
-# Output filename for stock and activity dataframe
-filename_output_stock_activity = output_folder + f'stock_activity_2019_{datetime.now().date()}.csv'
 
 # ----
 # CODE
@@ -109,7 +93,7 @@ activity_outliers_per_category_mapping, lifetime_activity_outliers_per_category_
     calculate_activity_outliers_thresholds(categorized_vehicles_df)
 
 # Save erroneous data to csv files
-save_to_csv_vehicles_with_erroneous_data(categorized_vehicles_df, output_folder,
+save_to_csv_vehicles_with_erroneous_data(categorized_vehicles_df, OUTPUT_FOLDER,
                                          activity_outliers_per_category_mapping,
                                          lifetime_activity_outliers_per_category_mapping)
 
@@ -178,8 +162,8 @@ stock_and_mileage_df.drop(['Notna_Count'], axis=1).to_csv(filename_output_stock_
 logger.info(f'Number of categories: {stock_and_mileage_df.shape[0]}')
 # Save wanted results
 logger.info('Loading charts')
-stock_per_category_pie_chart(categorized_vehicles_df, output_folder)
-euro_distribution_pie_charts(categorized_vehicles_df, output_folder)
-stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df, output_folder)
-activity_horizontal_bar_chart(stock_and_mileage_df, output_folder)
+stock_per_category_pie_chart(categorized_vehicles_df, OUTPUT_FOLDER)
+euro_distribution_pie_charts(categorized_vehicles_df, OUTPUT_FOLDER)
+stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df, OUTPUT_FOLDER)
+activity_horizontal_bar_chart(stock_and_mileage_df, OUTPUT_FOLDER)
 logger.info('end')
