@@ -17,7 +17,7 @@ from DataCleaning import (
     convert_to_integer_df_columns,
     print_info,
     save_to_csv_vehicles_with_erroneous_data
-                          )
+)
 from Classification import (
     category_fuel_segment_euro_classification_wrapper_function,
     MAPPING_CATEGORY_LAST_EURO_STANDARD

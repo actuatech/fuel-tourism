@@ -27,7 +27,7 @@ def save_to_csv_vehicles_with_erroneous_data(register_df: pd.DataFrame, output_f
     df1.to_csv((output_folder + 'turismes_amb_dades_cilindrada_erronies.csv'))
 
     df2 = register_df[(register_df['Category'] == 'Buses') & (register_df['PES_BUIT'] > 18000)]
-    df2.to_csv((output_folder + 'busos_amb_dades_pes_buit_erronies'))
+    df2.to_csv((output_folder + 'busos_amb_dades_pes_buit_erronies.csv'))
 
     df3 = register_df[(register_df['Category'] == 'L-Category') & (register_df['CC_CM3'] < 40)]
     df3.to_csv((output_folder + 'motos_amb_dades_cm3_erronies.csv'))
