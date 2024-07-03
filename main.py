@@ -71,9 +71,12 @@ info_logger.info(f'Total number of vehicles loaded: {itv_raw.shape[0]}')
 # DATA CLEANING
 # Keep only last 30 years of data
 vehicles_last_30_years = filter_by_year_greater_or_equal_than(itv_raw, 'ANY_FABRICACIO', MIN_YEAR)
+info_logger.info(f'Total number of vehicles from the last 30 years: {vehicles_last_30_years.shape[0]}')
 vehicles_last_30_years = filter_by_year_smaller_than(vehicles_last_30_years, 'DATA_ALTA', MAX_DATE)
+info_logger.info(f'Total number of vehicles from the last 30 years until today: {vehicles_last_30_years.shape[0]}')
 # Keep only vehicles that are not decommissioned
 vehicles_last_30_years_active_today = keep_row_if_na_in_column(vehicles_last_30_years, 'DATA_BAIXA')
+info_logger.info(f'Total number of vehicles active today: {vehicles_last_30_years_active_today.shape[0]}')
 # Drop vehicles with missing Fuel data
 good_vehicles_df = drop_vehicles_with_no_fuel_associated(vehicles_last_30_years_active_today)
 info_logger.info(f'Total number of vehicles taken into account: {good_vehicles_df.shape[0]}')

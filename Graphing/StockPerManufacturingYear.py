@@ -4,6 +4,8 @@ from typing import Dict, List
 
 from Classification import HYBRID_PHEV_TYPES
 
+import logging
+logger = logging.getLogger('logger' + '.VehiclesCategory')
 
 def figures_to_html(figs, filename="dashboard.html"):
     dashboard = open(filename, 'w', encoding='utf-8')
@@ -24,8 +26,13 @@ def categories_grouping(row):
         else:
             return 'PHEV'
     else:
-        result = row['Fuel'] + ' ' + row['Segment']
-        return result
+        try:
+            result = row['Fuel'] + ' ' + row['Segment']
+            return result
+        except TypeError:
+            logger.info('Vehicle without a defined category')
+            logger.info(row.to_string())
+            return 'Sense categoria definida'
 
 
 def update_chart_layout(figure, title: str = None):
