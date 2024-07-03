@@ -8,7 +8,7 @@ Aquest modul permet tractar l’Excel del Registre de vehicles i les seves dades
 Tots els resultats i gràfics es guardaran automàticament a la carpeta `output`
 
 ## Environment
-Utilitzar entorn Python amb les dependències segons fitxer ``Pipfile.lock``
+Utilitzar entorn Python amb les dependències segons fitxer ``requirements.txt``
 Dependencies to read Excel files: ``pip install xlrd`` and ``pip install openpyxl``
 
 
@@ -24,18 +24,19 @@ Canviar els paràmetres al fitxer ``settings.py``:
 * COVID_MILEAGE_ACTIVE: bool. Posar `True` si es vol calcular l'activitat només per revisions ITV per sota de la data COVID_START_DATE. Del contrari, `False`
 * COVID_START_DATE: Data a partir de la qual no es tenen en compte els quilometratges de les revisions ITV Per defecte: *datetime(2019, 3, 1)*
 * MAPPING_CATEGORY_LAST_EURO_STANDARD: Diccionari representat les últimes normatives Euro per cada una de les categories.
-```
+
+```python
 MAPPING_CATEGORY_LAST_EURO_STANDARD = {
     'Passenger Cars': {
         'last_euro': 'Euro 6 d-temp',
         'second_last_euro': 'Euro 6 a/b/c',
         'third_last_euro': 'Euro 5'
-                       },
+    },
     'Light Commercial Vehicles': {
             'last_euro': 'Euro 6 d-temp',
             'second_last_euro': 'Euro 6 a/b/c',
             'third_last_euro': 'Euro 5'
-                           },
+    },
     'L-Category': {
         'last_euro': 'Euro 5',
         'second_last_euro': 'Euro 4',
@@ -50,32 +51,36 @@ MAPPING_CATEGORY_LAST_EURO_STANDARD = {
         'last_euro': 'Euro VI D/E',
         'second_last_euro': 'Euro VI A/B/C',
         'third_last_euro': 'Euro V'
-        }
+    }
 ```     
 
 ***TODO Afegir MAPPING_CATEGORY_LAST_EURO_STANDARD al fitxer configuració***
 
 
-## Ingesta
+## Ingesta
 
 El mòdul “ingestion” és l’encarregat de carregar el fitxer Excel.
 L’Excel té que tenir com a mínim les següents columnes:
 
-  [‘TIPUS',
-   ‘ANY_FABRICACIO',
-   'DATA_ALTA',
+```
+[
+  'TIPUS',
+  'ANY_FABRICACIO',
+  'DATA_ALTA',
   'DATA_BAIXA',
-   'MARCA',
+  'MARCA',
   'MODEL',
-  ‘CARBURANT',
-   'CV',
-   ‘CC_CM3',
-   ‘PES_BUIT',
-  'DATA_DARRERA_ITV', 'KM_DARRERA_ITV',
-   'DATA_DARRERA_ITV2', 'KM_DARRERA_ITV2',
-  'DATA_DARRERA_ITV3',   'KM_DARRERA_ITV3',
+  'CARBURANT',
+  'CV',
+  'CC_CM3',
+  'PES_BUIT',
+  'DATA_DARRERA_ITV',  'KM_DARRERA_ITV',
+  'DATA_DARRERA_ITV2', 'KM_DARRERA_ITV2',
+  'DATA_DARRERA_ITV3', 'KM_DARRERA_ITV3',
   'DATA_DARRERA_ITV4', 'KM_DARRERA_ITV4',                           
-  'DATA_DARRERA_ITV5', 'KM_DARRERA_ITV5']
+  'DATA_DARRERA_ITV5', 'KM_DARRERA_ITV5'
+]
+```
 
 ## Neteja de dades
 
@@ -85,8 +90,8 @@ Aquest mòdul és l’encarregat de fer un primer filtre de les dades:
 * Eliminar vehicles donats de baixa.
 * Eliminar vehicles sense dades de carburants associades (només 2 vehicles a data 2021).
 
-## Classificació
 
+## Classificació
 
 El fitxer `ClassificationWrapper.py` encapsula les funcions realitzades per tot el mòdul.
 
@@ -129,7 +134,7 @@ Se segueix el següent ordre de prioritat fins a que s’assoleix l’estoc mín
 
 1. Agrupació per Category, Fuel, Segment: No es té en compte Euro Standard, es a dir antiguitat del vehicle.
 2. Agrupació per Category, Fuel, Euro Standard: No és té en compte Segment, es a dir tamany del vehicle.
-3. Agrupació per  Category, Fuel: Només es té en compte Categoria i tipus de carburant del vehicle
+3. Agrupació per Category, Fuel: Només es té en compte Categoria i tipus de carburant del vehicle
 4. Agrupació per Categoria i Segment:
 5. Agrupació per Categoria: Només es té en compt categoria vehicles
 
