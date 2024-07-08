@@ -38,6 +38,7 @@ from settings import (
     path_registre_vehicles,
     MIN_YEAR,
     MAX_DATE,
+    MIN_DAYS_BETWEEN_REVISIONS,
     MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION,
     COVID_MILEAGE_ACTIVE,
     COVID_START_DATE,
@@ -88,7 +89,7 @@ categorized_vehicles_df = category_fuel_segment_euro_classification_wrapper_func
 # Create columns Mileage, number of days and corresponding Activity for each vehicle
 categorized_vehicles_df['Num_of_days'], categorized_vehicles_df['Mileage'], categorized_vehicles_df['Activity'], \
     categorized_vehicles_df['Lifetime Activity'] = zip(*categorized_vehicles_df.apply(
-        lambda row: activity_time_and_km_between_itv_revisions(row, MAX_DATE), axis=1))
+        lambda row: activity_time_and_km_between_itv_revisions(row, MAX_DATE, MIN_DAYS_BETWEEN_REVISIONS), axis=1))
 
 
 # Assign to nan Activity outliers
