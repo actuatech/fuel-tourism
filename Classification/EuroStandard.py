@@ -55,7 +55,7 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
             elif 2020 <= row['ANY_FABRICACIO'] < 2021:
                 return 'Euro 6 d-temp'
             elif row['ANY_FABRICACIO'] >= 2021:
-                return 'Euro 6 d'
+                return 'Euro 6 d/e'
         else:
             return None
 
@@ -80,7 +80,7 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 elif 2020 <= row['ANY_FABRICACIO'] < 2021:
                     return 'Euro 6 d-temp'
                 elif row['ANY_FABRICACIO'] >= 2021:
-                    return 'Euro 6 d'
+                    return 'Euro 6 d/e'
 
         else:  # Segments N1-II and N1-III
             if row['Fuel'] == 'Diesel':
@@ -101,7 +101,7 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 elif 2020 <= row['ANY_FABRICACIO'] < 2022:
                     return 'Euro 6 d-temp'
                 elif row['ANY_FABRICACIO'] >= 2022:
-                    return 'Euro 6 d'
+                    return 'Euro 6 d/e'
             elif row['Fuel'] == 'Petrol':
                 if row['ANY_FABRICACIO'] < 1995:
                     return 'Conventional'
@@ -120,7 +120,7 @@ def euro_standard_identification_by_year_of_manufacturing(row) -> str:
                 elif 2020 <= row['ANY_FABRICACIO'] < 2021:
                     return 'Euro 6 d-temp'
                 elif row['ANY_FABRICACIO'] >= 2021:
-                    return 'Euro 6 d'
+                    return 'Euro 6 d/e'
             elif row['Fuel'] == 'Battery Electric':
                 return None
 

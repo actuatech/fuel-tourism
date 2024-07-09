@@ -10,7 +10,7 @@ path_registre_vehicles = cwd / '_data' / filename_registre_vehicles
 # 22APR2024_Historic_vehicles_amb_ITVs
 # Years between from which data is keeped
 MIN_YEAR = 1990
-MAX_DATE = datetime(2025, 1, 1)
+MAX_DATE = datetime(2024, 1, 1)
 
 MIN_DAYS_BETWEEN_REVISIONS = 150 # UNUSED
 MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid

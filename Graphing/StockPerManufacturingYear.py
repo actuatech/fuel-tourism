@@ -79,14 +79,14 @@ def stock_per_manufacturing_year_and_category_bar_charts(categorized_vehicles_df
     data['segmentation'] = data.apply(lambda row: categories_grouping(row), axis=1)
 
     colors = ['rgb(0,68,27)', 'rgb(35,139,69)', 'rgb(199,233,192)',
-              'rgb(8,48,107)', 'rgb(33,113,181)', 'rgb(107,174,214)', # 'rgb(198,219,239)', # Color for Diesel Mini
-              'rgb(127,39,4)', 'rgb(217,72,1)', 'rgb(253,141,60)', 'rgb(253,208,162)'
+              'rgb(8,48,107)', 'rgb(33,113,181)', 'rgb(107,174,214)', 'rgb(198,219,239)', # Color for Diesel Mini
+              'rgb(127,39,4)', 'rgb(217,72,1)', 'rgb(253,141,60)', 'rgb(253,208,162)', 'rgb(171,171,171)' 
               ]
     category_orders = {"segmentation": ['Battery Electric', 'PHEV', 'Hybrid',
                                         'Diesel Large-SUV-Executive', 'Diesel Medium', 'Diesel Small',
                                         'Diesel Mini',
                                         'Petrol Large-SUV-Executive', 'Petrol Medium', 'Petrol Small',
-                                        'Petrol Mini']
+                                        'Petrol Mini', 'LPG Bi-fuel Small']
                        }
 
     fig = create_chart_with_segmentation_and_colors_configuration(data, category_orders, colors)

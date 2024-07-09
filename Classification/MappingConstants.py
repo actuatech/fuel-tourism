@@ -24,7 +24,7 @@ FUEL_MAPPING_DICT = {       # De moment no hi han vehicles amb Gas Natural, si a
     'HIBRID GASOLINA ENDOLLABLE': 'Petrol PHEV',
     'HIB.GASOLINA ENDOLLABLE': 'Petrol PHEV',
     'ELEC. AUTO. ESTESA': 'Battery Electric',  # Només hi ha el BMW I3 amb aquest carburant (elec)
-    'GASOLINA-GPL': 'GPL'
+    'GASOLINA-GPL': 'LPG Bi-fuel'
 }
 
 MAPPING_CATEGORY_LAST_EURO_STANDARD = {
@@ -56,4 +56,4 @@ MAPPING_CATEGORY_LAST_EURO_STANDARD = {
 }
 CATEGORIES = ['Passenger Cars', 'Light Commercial Vehicles', 'Heavy Duty Trucks', 'Buses', 'L-Category', 'Off Road']
 HYBRID_PHEV_TYPES = ['Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV']
-NON_ELECTRIC_FUEL_TYPES = ['Petrol', 'Diesel', 'Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV', 'GPL']
+NON_ELECTRIC_FUEL_TYPES = ['Petrol', 'Diesel', 'Diesel Hybrid', 'Petrol Hybrid', 'Petrol PHEV', 'Diesel PHEV', 'LPG Bi-fuel']
