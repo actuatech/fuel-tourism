@@ -31,7 +31,7 @@ def euro_distribution_pie_charts(categorized_vehicles_df: pd.DataFrame, output_f
             labels=data['Euro Standard'],
             values=data['Stock'],
             textinfo='percent+value',
-            texttemplate='%{value:0f}\n\ %{percent:0%f}',
+            texttemplate='%{value:.0f} \n\\ %{percent:.2%}',
             legendgroup=legend_group
         ), rows[i], col)
 

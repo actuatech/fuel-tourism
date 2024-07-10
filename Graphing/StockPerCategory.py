@@ -18,7 +18,7 @@ def stock_per_category_pie_chart(categorized_vehicles_df: pd.DataFrame, output_f
                        color_discrete_map=COLOR_DISCRETE_MAP)
     pie_chart.update_traces(
         textinfo='percent+value',
-        texttemplate='%{value:0f} \n\  %{percent:0%f}'
+        texttemplate='%{value:.0f} \n\\  %{percent:.2%}'
     )
 
     pie_chart.update_layout(
