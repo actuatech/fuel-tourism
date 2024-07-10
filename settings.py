@@ -12,7 +12,7 @@ path_registre_vehicles = cwd / '_data' / filename_registre_vehicles
 MIN_YEAR = 1990
 MAX_DATE = datetime(2024, 1, 1)
 
-MIN_DAYS_BETWEEN_REVISIONS = 150 # UNUSED
+MIN_DAYS_BETWEEN_REVISIONS = 150
 MIN_STOCK_FOR_MEAN_ACTIVITY_CALCULATION = 50  # Min numb of vehicles in a given grouping to take the mean activity valid
 
 # To keep current stock but calculate activity before covid date
