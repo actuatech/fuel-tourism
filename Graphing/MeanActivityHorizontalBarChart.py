@@ -10,7 +10,7 @@ def all_categories_grouping(row: pd.Series) -> str:
     Merge Category, Fuel and segment to a single string for unique categorization
     """
     if row['Fuel'] == 'Battery Electric':
-        return row['Category'] + ' / ' + row['Fuel']
+        return row['Fuel'] + ' / ' + row['Segment']
     else:
         try:
             result = row['Fuel'] + ' / ' + row['Segment'] + ' / ' + row['Euro Standard']

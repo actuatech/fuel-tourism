@@ -10,7 +10,7 @@ from .ReClassification import (
                                )
 from .MappingFunctions import category_mapper_itv_copert, fuel_mapper_itv_copert
 from .SegmentRedistribution import fill_nan_with_frequency
-from .MappingConstants import NON_ELECTRIC_FUEL_TYPES
+from .MappingConstants import NON_ELECTRIC_FUEL_TYPES, ELECTRIC_TYPES
 
 logger = logging.getLogger('logger' + '.ClassificationWrapper')
 
@@ -30,7 +30,7 @@ def category_fuel_segment_euro_classification_wrapper_function(register_df: pd.D
     # For vehicles with erroneous weight or CC_M3 data, assigns Segment by normal distribution
     fill_nan_with_frequency(df, 'Segment')
     # Assign Segment value of Electrical and Off Road vehicles to None
-    df.loc[~df['Fuel'].isin(NON_ELECTRIC_FUEL_TYPES), 'Segment'] = None
+    df.loc[~df['Fuel'].isin(NON_ELECTRIC_FUEL_TYPES + ELECTRIC_TYPES), 'Segment'] = None
     df.loc[df['Category'] == 'Off Road', 'Segment'] = None
 
     # Addapt Segment results not present in Copert Stock Configuration

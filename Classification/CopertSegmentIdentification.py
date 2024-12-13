@@ -1,7 +1,7 @@
 import pandas as pd
 import logging
 
-from .MappingConstants import NON_ELECTRIC_FUEL_TYPES
+from .MappingConstants import NON_ELECTRIC_FUEL_TYPES, ELECTRIC_TYPES
 
 info_logger = logging.getLogger('info_logger' + '.CopertSegmentIdentification')
 
@@ -101,5 +101,32 @@ def segment_identification_for_each_category(row: pd.Series) -> str:
         else:
             info_logger.warning('Vehicle with no Category:')
             info_logger.warning(row)
+            
+    elif row['Fuel'] in ELECTRIC_TYPES:
+        if row['Category'] == 'Passenger Cars':
+            if row['KW'] < 50:
+                return 'Mini'
+            elif row['KW'] < 80:
+                return 'Small'
+            elif row['KW'] < 145:
+                return 'Medium'
+            else:
+                return 'Large'
+        
+        elif row['Category'] == 'Light Commercial Vehicles':
+            if row['PES_BUIT'] < 1305:
+                return 'N1-I'
+            elif row['PES_BUIT'] < 1760:
+                return 'N1-II'
+            else:
+                return 'N1-III'
+            
+        elif row['Category'] == 'L-Category':
+            return 'Electric Motorcycles'
+
+        else:
+            info_logger.warning('Vehicle with no Category:')
+            info_logger.warning(row)
+
     else:
         return None
