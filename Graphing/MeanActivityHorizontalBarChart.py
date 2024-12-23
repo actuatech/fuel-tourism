@@ -46,17 +46,17 @@ def activity_horizontal_bar_chart(stock_and_mileage_df: pd.DataFrame.groupby, ou
                                          name='Activitat mínima', marker_color='rgb(229, 196, 148)'
                                          ))
     horizontal_plot.add_trace(go.Scatter(y=data['segmentation'], x=data['Std_Activity'], mode='markers',
-                                         name="Desviació standard de l'activitat", marker=dict(
+                                         name="Desviació standard de l'activitat", showlegend=False, marker=dict(
             color='rgb(800, 800, 800)',
             opacity=0)
                                          ))
     horizontal_plot.add_trace(go.Scatter(y=data['segmentation'], x=data['Stock'], mode='markers',
-                                         name="Estoc", marker=dict(
+                                         name="Estoc", showlegend=False, marker=dict(
             color='rgb(800, 800, 800)',
             opacity=0)
                                          ))
     horizontal_plot.add_trace(go.Scatter(y=data['segmentation'], x=data['Mean_Lifetime_Activity'], mode='markers',
-                                         name="Lifetime cumulative activity mitja", marker=dict(
+                                         name="Lifetime cumulative activity mitja", showlegend=False, marker=dict(
             color='rgb(800, 800, 800)',
             opacity=0)
                                          ))
