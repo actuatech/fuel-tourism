@@ -26,3 +26,5 @@ OUTPUT_FOLDER = 'output/'
 filename_output_categorized_vehicle_data = OUTPUT_FOLDER + f'Registre_vehicles_{datetime.now().date()}.csv'
 # Output filename for stock and activity dataframe
 filename_output_stock_activity = OUTPUT_FOLDER + f'stock_activity_2024_{datetime.now().date()}.csv'
+# Output filename for quantified vehicles per year
+filename_output_vehicles_per_year = OUTPUT_FOLDER + f'quantified_vehicles_per_year_{datetime.now().date()}.csv'

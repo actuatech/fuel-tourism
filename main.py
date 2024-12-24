@@ -44,7 +44,8 @@ from settings import (
     COVID_START_DATE,
     OUTPUT_FOLDER,
     filename_output_categorized_vehicle_data,
-    filename_output_stock_activity
+    filename_output_stock_activity,
+    filename_output_vehicles_per_year
 )
 
 # Working directory
@@ -109,6 +110,12 @@ categorized_vehicles_df['Activity'], categorized_vehicles_df['Lifetime Activity'
 print_info(categorized_vehicles_df) # print info
 logger.info('Saving cleaned, categorized data and vehicle activity to csv')
 categorized_vehicles_df.to_csv(filename_output_categorized_vehicle_data)
+
+# QUANTIFICATION PER MANUFACTURE YEAR
+veh_per_year_df = categorized_vehicles_df.groupby(['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False, as_index=False).agg(
+        quantity=('ANY_FABRICACIO', 'count')).reset_index()
+veh_per_year_df = veh_per_year_df.sort_values(by=['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], ascending=True)
+veh_per_year_df.to_csv(filename_output_vehicles_per_year, index=False)
 
 
 # Create Stock Column

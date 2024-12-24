@@ -27,8 +27,12 @@ def category_fuel_segment_euro_classification_wrapper_function(register_df: pd.D
     df['Segment'] = df.apply(lambda row: segment_identification_for_each_category(row), axis=1)
     df['Euro Standard'] = df.apply(lambda row: euro_standard_identification_by_year_of_manufacturing(row), axis=1)
 
-    # For vehicles with erroneous weight or CC_M3 data, assigns Segment by normal distribution
-    fill_nan_with_frequency(df, 'Segment')
+    # For non electric vehicles with erroneous weight or CC_M3 data, assigns Segment by normal distribution
+    df_only_electric = df[df['Fuel'].isin(ELECTRIC_TYPES)]
+    df_without_electric = df[~df['Fuel'].isin(ELECTRIC_TYPES)]
+    fill_nan_with_frequency(df_without_electric, 'Segment')
+    df = pd.concat([df_only_electric, df_without_electric])
+    
     # Assign Segment value of Electrical and Off Road vehicles to None
     df.loc[~df['Fuel'].isin(NON_ELECTRIC_FUEL_TYPES + ELECTRIC_TYPES), 'Segment'] = None
     df.loc[df['Category'] == 'Off Road', 'Segment'] = None
