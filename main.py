@@ -45,7 +45,8 @@ from settings import (
     OUTPUT_FOLDER,
     filename_output_categorized_vehicle_data,
     filename_output_stock_activity,
-    filename_output_vehicles_per_year
+    filename_output_vehicles_per_manufactuing_year,
+    filename_output_vehicles_per_registration_year
 )
 
 # Working directory
@@ -111,11 +112,19 @@ print_info(categorized_vehicles_df) # print info
 logger.info('Saving cleaned, categorized data and vehicle activity to csv')
 categorized_vehicles_df.to_csv(filename_output_categorized_vehicle_data)
 
-# QUANTIFICATION PER MANUFACTURE YEAR
-veh_per_year_df = categorized_vehicles_df.groupby(['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False, as_index=False).agg(
+# Grouping per manufactuing year
+veh_per_manuf_year_df = categorized_vehicles_df.groupby(['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], dropna=False, as_index=False).agg(
         quantity=('ANY_FABRICACIO', 'count')).reset_index()
-veh_per_year_df = veh_per_year_df.sort_values(by=['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], ascending=True)
-veh_per_year_df.to_csv(filename_output_vehicles_per_year, index=False)
+veh_per_manuf_year_df = veh_per_manuf_year_df.sort_values(by=['Category', 'Fuel', 'Segment', 'ANY_FABRICACIO'], ascending=True)
+veh_per_manuf_year_df.to_csv(filename_output_vehicles_per_manufactuing_year, index=False)
+
+# Grouping per registration year
+veh_per_reg_year_df = categorized_vehicles_df.copy()
+veh_per_reg_year_df['DATA_ALTA'] = veh_per_reg_year_df['DATA_ALTA'].dt.year
+veh_per_reg_year_df = veh_per_reg_year_df.groupby(['Category', 'Fuel', 'Segment', 'DATA_ALTA'], dropna=False, as_index=False).agg(
+        quantity=('DATA_ALTA', 'count')).reset_index()
+veh_per_reg_year_df = veh_per_reg_year_df.sort_values(by=['Category', 'Fuel', 'Segment', 'DATA_ALTA'], ascending=True)
+veh_per_reg_year_df.to_csv(filename_output_vehicles_per_registration_year, index=False)
 
 
 # Create Stock Column
