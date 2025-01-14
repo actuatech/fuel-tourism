@@ -82,9 +82,8 @@ def activity_horizontal_bar_chart(stock_and_mileage_df: pd.DataFrame.groupby, ou
         hoverlabel=dict(namelength=100),
         xaxis_range=[0, stock_and_mileage_df['Max_Activity'].max()*1.05],
         xaxis=dict(
-            tickmode='array',
-            tickvals=[0, 5000, 15000, 25000, 50000, 100000, 150000, 200000],
-            ticktext=['0', '5k', '15k', '25k', '50k', '100k', '150k', '200k'])
+            range=[0, max(data['Stock'].max(), data['Max_Activity'].max(), data['Min_Activity'].max(), data['Std_Activity'].max())]
+        )
     )
     horizontal_plot.update_xaxes(showgrid=True, zeroline=True)
     horizontal_plot.show()
